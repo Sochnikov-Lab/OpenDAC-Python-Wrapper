@@ -3,6 +3,7 @@
 //Modified by Carlos Kometter 7/7/2015
 #include "SPI.h" // necessary library for SPI communication
 #include <vector>
+#include <MemoryFree.h>;
 
 int adc = 52; //The SPI pin for the ADC
 int dac = 4; //The SPI pin for the DAC
@@ -13,8 +14,8 @@ int drdy = 48; // Data is ready pin on ADC
 int led = 32;
 int data = 28; //Used for trouble shooting; connect an LED between pin 13 and GND
 int err = 30;
-const int Noperations = 14;
-String operations[Noperations] = {"NOP", "SET", "GET_ADC", "RAMP1", "RAMP2", "BUFFER_RAMP", "RESET", "TALK", "CONVERT_TIME", "*IDN?", "*RDY?", "RAR1", "SIN", "ACQ1"};
+const int Noperations = 16;
+String operations[Noperations] = {"NOP", "SET", "GET_ADC", "RAMP1", "RAMP2", "BUFFER_RAMP", "RESET", "TALK", "CONVERT_TIME", "*IDN?", "*RDY?", "RAR1", "SIN", "ACQA","RARA","SRAMF"};
 
 namespace std {
 void __throw_bad_alloc()
@@ -28,6 +29,7 @@ void __throw_length_error( char const*e )
   Serial.println(e);
 }
 }
+
 
 void setup()
 {
@@ -572,6 +574,28 @@ void debug()
 }
 
 //CUSTOM FUNCTIONS//////////////////////////////////////////////////////////////////////////
+int fixMapADC(int adcChannel)
+{
+  switch (adcChannel)
+  {
+    case 0:
+      return 1;
+      break;
+    case 1:
+      return 3;
+      break;
+    case 2:
+      return 0;
+      break;
+    case 3:
+      return 2;
+      break;
+    default:
+      return 0;
+      break;
+  }
+}
+
 //Copy of autoRamp1 while reading from ADC channel
 //RAR1,[ADC#],[DAC#],[InitV],[FinalV],[Steps],[Delay]
 void RAR1(std::vector<String> DB)
@@ -584,6 +608,8 @@ void RAR1(std::vector<String> DB)
   float val[nSteps];
 
   //Correct for mapping discrepency between called for and hardware
+  adcChannel = fixMapADC(adcChannel);
+  /*
   switch (adcChannel)
   {
     case 0:
@@ -601,6 +627,8 @@ void RAR1(std::vector<String> DB)
     default:
       break;
   }
+  */
+  
 
   //Ramp through values and save into buffer
   for (int j = 0; j < nSteps; j++)
@@ -629,14 +657,81 @@ void RAR1(std::vector<String> DB)
 
 }
 
+//Copy of autoRamp1 while reading from ADC channel. Ramps and reads ALL channels (both ADC/DAC)
+//RARA,[InitV0],[FinalV0],[InitV1],[FinalV1],[InitV2],[FinalV2],[InitV3],[FinalV3],[Steps],[Delay]
+//Example: RARS,0,0,0,5,-5,5,5,5,10,1000
+//         Reads from ADCs 0,1, 2, and 3 
+//         while
+//         ramping DACs 0,1,2,3 from 0 to 0v, 0 to 5v ,-5 to 5v, and 5v to 5v.
+//         respectfully in 10 steps with 1000us delay
+//         note: keep channels constant by giving the same value for init and final voltages.
+//         --->Voltages are read out in 4, comma separated lines (ch0 to ch3 order) 
+void RARA(std::vector<String> DB)
+{
+  float vi[4];
+  float vf[4];
+  int nSteps = DB[9].toInt();
+  int StepDelay = DB[10].toInt();
+  float val[4][nSteps]; //indices: val[ch][step#]
+
+  vi[0] = DB[1].toFloat();
+  vf[0] = DB[2].toFloat();
+
+  vi[1] = DB[3].toFloat();
+  vf[1] = DB[4].toFloat();
+
+  vi[2] = DB[5].toFloat();
+  vf[2] = DB[6].toFloat();
+
+  vi[3] = DB[7].toFloat();
+  vf[3] = DB[8].toFloat();
+  
+
+  //Ramp through values and save into buffer
+  for (int j = 0; j < nSteps; j++)
+  {
+    int timer = micros();
+    digitalWrite(data, HIGH);
+    writeDAC(0, vi[0] + (vf[0] - vi[0])*j / (nSteps - 1));
+    writeDAC(1, vi[1] + (vf[1] - vi[1])*j / (nSteps - 1));
+    writeDAC(2, vi[2] + (vf[2] - vi[2])*j / (nSteps - 1));
+    writeDAC(3, vi[3] + (vf[3] - vi[3])*j / (nSteps - 1));
+    digitalWrite(data, LOW);
+    val[0][j] = getSingleReading(fixMapADC(0));
+    val[1][j] = getSingleReading(fixMapADC(1));
+    val[2][j] = getSingleReading(fixMapADC(2));
+    val[3][j] = getSingleReading(fixMapADC(3));
+    //while (micros() <= timer + (DB[6].toInt())/2); //wait half delay
+    //read voltage from ADC
+    while (micros() <= timer + StepDelay);
+
+  }
+
+  //For each channel....
+  for(int ch = 0; ch < 4; ch++)
+  {
+    //Print out voltages in a single, comma delimited line
+    for (int j = 0; j < nSteps; j++)
+    {
+      Serial.print(val[ch][j]);
+      Serial.flush();
+      if (j != nSteps - 1) {
+        Serial.print(',');
+      }
+    }
+    Serial.println(' ');
+  }
+
+}
+
 //Acquire 1 channel over time CollectTime (seconds) with sample rate SampleRate(Hz) and integration time IntTime(microsec)
 //Syntax: ACQ1,ADC#,ACQTime,SampleRate,IntTime
-void acq1(std::vector<String> DB)
+void ACQA(std::vector<String> DB)
 {
   int adcChannel = DB[1].toInt();
-  int CollectTime = DB[2].toInt() * 1000000; // Input seconds but internally microsec
-  int SampleRate = DB[3].toInt(); //Input Hz but internally 1/microsec
-  int IntTime = DB[4].toInt();  //Input microsec, internally microsec
+  float CollectTime = DB[2].toFloat() * 1000000; // Input seconds but internally microsec
+  float SampleRate = DB[3].toFloat() / 1000000; //Input Hz but internally 1/microsec
+  float IntTime = DB[4].toFloat();  //Input microsec, internally microsec
   int IntSamples = IntTime / SampleRate;
   int nSteps = CollectTime / SampleRate;
   float val[nSteps];
@@ -718,6 +813,11 @@ void sinw(std::vector<String> DB)
   }
 }
 
+void SRAMF(std::vector<String> DB)
+{
+  Serial.println(String(freeMemory()));
+}
+
 
   void router(std::vector<String> DB)
   {
@@ -797,10 +897,17 @@ void sinw(std::vector<String> DB)
       Serial.println("SINE_FINISHED");
       break;
 
-     case 13: // Acquire over time, one channel
-       acq1(DB);
+     case 13: // Acquire over time, all channels
+       ACQA(DB);
        break;
 
+     case 14: // Ramp and Read over time, all channels
+       RARA(DB);
+       break;
+     case 15: // Print Free SRAM
+       SRAMF(DB);
+       break;
+     
     default:
       break;
   }

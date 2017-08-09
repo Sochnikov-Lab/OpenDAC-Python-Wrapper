@@ -1,6 +1,8 @@
 # OpenDAC-Python-Wrapper
 Python wrapper and extended Arduino code for the serial controlled OpenDAC DAC-ADC.
 Original Arduino sketch provided here: http://opendacs.com/dac-adc-homepage/dac-adc-code/
+You will need PyQt5 installed to make use of the GUI. It is suggested that you use
+Anaconda.
 
 # Arduino Code:
 Adding some common functions and acquisition features. To be documented later.
