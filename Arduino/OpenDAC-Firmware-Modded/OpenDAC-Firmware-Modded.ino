@@ -779,16 +779,22 @@ void ACQ(std::vector<String> DB,int nCh)
     float CollectTime = DB[2].toFloat() * 1000000; // Input seconds but internally microsec
     float SampleRate = DB[3].toFloat() / 1000000; //Input Hz but internally 1/microsec
     float IntTime = DB[4].toFloat();  //Input microsec, internally microsec
-    int IntSamples = IntTime / SampleRate;
-    int nSteps = CollectTime / SampleRate;
+    int IntSamples = floor(IntTime / SampleRate);
+    int nSteps = floor(CollectTime / SampleRate);
     float IntermediateSamples[IntSamples]; //Pre-Averaged samples
     
     //Ramp through values and save into buffer
     for (int j = 0; j < nSteps; j++)
     {
       int timer = micros();
-      //Make for loop for averaging
-      linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel));
+      int runningsum = 0;
+      //Loop for averaging
+      for(int k = 0; k < IntSamples; k++)
+      {
+        runningsum += getSingleReading(adcChannel);
+        while (micros() <= timer + DB[6].toFloat()/(k*IntSamples.toFloat()));
+      }
+      linearWriteToBuffer(bufferv,j,runningsum / IntSamples.toFloat()));
       while (micros() <= timer + DB[6].toInt());
     }
   }
