@@ -6,6 +6,7 @@ ODAQ1.getADC(0)
 #ODAQ1.ramp1(0,0,-5,5,20,1000) #prints
 ODAQ1.ramp1(0,0,-5,5,20,100000) #doesn't print
 #RAR1,0,0,-5,5,20,1000
+#RARA,0,5,0,5,0,5,0,5,10,1000
 #ODAQ1.ramp1(0,0,5,-5,20,100000)
 ODAQ1.setDAC(0,0)
 

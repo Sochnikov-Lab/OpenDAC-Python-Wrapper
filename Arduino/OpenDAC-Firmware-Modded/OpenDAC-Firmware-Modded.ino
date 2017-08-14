@@ -89,7 +89,7 @@ void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
         Serial.print(',');
       }
     }
-    Serial.println(' ');
+    Serial.println(' a');
   }
 }
 
@@ -697,7 +697,8 @@ void RAR(std::vector<String> DB,int nCh)
     float v2 = DB[4].toFloat();
     int nSteps = DB[5].toInt();
     int dacChannel = DB[2].toInt();
-    int adcChannel = DB[1].toInt();
+    int adcChannel = fixMapADC(DB[1].toInt());
+    
     //Ramp through values and save into buffer
     for (int j = 0; j < nSteps; j++)
     {
@@ -705,7 +706,7 @@ void RAR(std::vector<String> DB,int nCh)
       digitalWrite(data, HIGH);
       writeDAC(dacChannel, v1 + (v2 - v1)*j / (nSteps - 1));
       digitalWrite(data, LOW);
-      linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel))
+      linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel));
       //while (micros() <= timer + (DB[6].toInt())/2); //wait half delay
       //read voltage from ADC
       while (micros() <= timer + DB[6].toInt());
@@ -745,13 +746,13 @@ void RAR(std::vector<String> DB,int nCh)
   }
 
   //Read out buffer:
-  if(nCh = 1)
+  if(nCh == 1)
   {
-    linearReadBuffer(bufferv,nSteps);
+    linearReadBuffer(bufferv,DB[5].toInt());
   }
   else
   {
-    quadReadBuffer(bufferv,nSteps);
+    quadReadBuffer(bufferv,DB[9].toInt());
   }
 
   //Clear buffer:
@@ -763,65 +764,70 @@ void RAR(std::vector<String> DB,int nCh)
 //Syntax: ACQ1,ADC#,ACQTime,SampleRate,IntTime
 void ACQ(std::vector<String> DB,int nCh)
 {
-  int adcChannel = DB[1].toInt();
-  float CollectTime = DB[2].toFloat() * 1000000; // Input seconds but internally microsec
-  float SampleRate = DB[3].toFloat() / 1000000; //Input Hz but internally 1/microsec
-  float IntTime = DB[4].toFloat();  //Input microsec, internally microsec
-  int IntSamples = IntTime / SampleRate;
-  int nSteps = CollectTime / SampleRate;
-  float val[nSteps];
-  float valstoint[IntSamples];
-
+  /*
   Serial.println("Collection Time  : " + String(CollectTime) + " microseconds.");
   Serial.println("       -> samples: " + String(nSteps) + " samples.");
   Serial.println("Sample Rate      : " + String(SampleRate) + "1/us");
   Serial.println("Integration      : " + String(IntSamples) + " samples over " + String(IntTime) + "us");
+  */
+  
+//Read from ADC
+  if(nCh == 1)
+  {
+    //Converting serial string into variables:
+    int adcChannel = fixMapADC(DB[1].toInt());
+    float CollectTime = DB[2].toFloat() * 1000000; // Input seconds but internally microsec
+    float SampleRate = DB[3].toFloat() / 1000000; //Input Hz but internally 1/microsec
+    float IntTime = DB[4].toFloat();  //Input microsec, internally microsec
+    int IntSamples = IntTime / SampleRate;
+    int nSteps = CollectTime / SampleRate;
+    float IntermediateSamples[IntSamples]; //Pre-Averaged samples
+    
+    //Ramp through values and save into buffer
+    for (int j = 0; j < nSteps; j++)
+    {
+      int timer = micros();
+      //Make for loop for averaging
+      linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel));
+      while (micros() <= timer + DB[6].toInt());
+    }
+  }
+  else
+  {
+    //Converting serial string into variables:
+    float CollectTime = DB[1].toFloat() * 1000000; // Input seconds but internally microsec
+    float SampleRate = DB[2].toFloat() / 1000000; //Input Hz but internally 1/microsec
+    float IntTime = DB[3].toFloat();  //Input microsec, internally microsec
+    int IntSamples = IntTime / SampleRate;
+    int nSteps = CollectTime / SampleRate;
 
+    //Read from ADC
+    for (int j = 0; j < nSteps; j++)
+    {
+      int timer = micros();
+      quadWriteToBuffer(bufferv,j,getSingleReading(fixMapADC(0)), getSingleReading(fixMapADC(1)), getSingleReading(fixMapADC(2)), getSingleReading(fixMapADC(3)));
+      while (micros() <= timer + StepDelay);
+    }
+  }
 
+  //Read out buffer:
+  if(nCh == 1)
+  {
+    linearReadBuffer(bufferv,DB[5].toInt());
+  }
+  else
+  {
+    quadReadBuffer(bufferv,DB[9].toInt());
+  }
+
+  //Clear buffer:
+  clearbuffer(bufferv);
 
 
 
   //Make sure to ensure that IntTime < Samplerate ** -1 !!!!!!!!
 
-  /*
-  //Correct for mapping discrepency between called for and hardware
-  switch (adcChannel)
-  {
-    case 0:
-      adcChannel = 1;
-      break;
-    case 1:
-      adcChannel = 3;
-      break;
-    case 2:
-      adcChannel = 0;
-      break;
-    case 3:
-      adcChannel = 2;
-      break;
-    default:
-      break;
-  }
 
-  for (int j = 0; j < nSteps; j++)
-  {
-    int timer = micros();
-    for(int i = 0; i < IntSamples;
-    val[j] = getSingleReading(adcChannel);
-    while (micros() <= timer + DB[6].toInt());
-  }
-
-  //Print out voltages in a single, comma delimited line
-  for (int j = 0; j < nSteps; j++)
-  {
-    Serial.print(val[j]);
-    if (j != nSteps - 1) {
-      Serial.print(',');
-    }
-    delay(10);
-  }
-  Serial.println(' ');
-  */
 }
 
 //Sine Wave out
