@@ -2,7 +2,7 @@ import serial
 import io
 
 #Open DAC-ADC Class
-class ODAQ(object):
+class ODAC(object):
     #Initialization: create necessary variables and configurable serial instance
     def __init__(self):
         self.ID = ''         #ID of instrument
@@ -39,7 +39,7 @@ class ODAQ(object):
             else:
                 self.ready = False
 
-            if self.ser.is_open == True and verbose == 1:
+            if self.ser.isOpen == True and verbose == 1:
                 print("================Connection==================")
                 print("o  Port:            " + self.ser.port)
                 print("o  Baudrate:        " + str(self.ser.baudrate))
@@ -47,7 +47,7 @@ class ODAQ(object):
                 print("o  Device Status:   " + status)
                 print("============================================")
         except serial.SerialException:
-            print("**Failed to open serial port**")
+            print("**ODAC: Failed to open serial port**")
 
     def close(self,verbose=0):
         try:
