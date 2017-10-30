@@ -3,7 +3,7 @@
 //Modified by Carlos Kometter 7/7/2015
 #include "SPI.h" // necessary library for SPI communication
 #include <vector>
-#include <MemoryFree.h>;
+//include <MemoryFree.h>;
 
 int adc = 52; //The SPI pin for the ADC
 int dac = 4; //The SPI pin for the DAC
@@ -698,7 +698,7 @@ void RAR(std::vector<String> DB,int nCh)
     int nSteps = DB[5].toInt();
     int dacChannel = DB[2].toInt();
     int adcChannel = fixMapADC(DB[1].toInt());
-    
+
     //Ramp through values and save into buffer
     for (int j = 0; j < nSteps; j++)
     {
@@ -770,7 +770,7 @@ void ACQ(std::vector<String> DB,int nCh)
   Serial.println("Sample Rate      : " + String(SampleRate) + "1/us");
   Serial.println("Integration      : " + String(IntSamples) + " samples over " + String(IntTime) + "us");
   */
-  
+
 //Read from ADC
   if(nCh == 1)
   {
@@ -782,7 +782,7 @@ void ACQ(std::vector<String> DB,int nCh)
     int IntSamples = floor(IntTime / SampleRate);
     int nSteps = floor(CollectTime / SampleRate);
     float IntermediateSamples[IntSamples]; //Pre-Averaged samples
-    
+
     //Ramp through values and save into buffer
     for (int j = 0; j < nSteps; j++)
     {
@@ -792,9 +792,9 @@ void ACQ(std::vector<String> DB,int nCh)
       for(int k = 0; k < IntSamples; k++)
       {
         runningsum += getSingleReading(adcChannel);
-        while (micros() <= timer + DB[6].toFloat()/(k*IntSamples.toFloat()));
+        while (micros() <= timer + DB[6].toFloat()/(k*IntSamples));//removed .toFloat() from IntSamples
       }
-      linearWriteToBuffer(bufferv,j,runningsum / IntSamples.toFloat()));
+      linearWriteToBuffer(bufferv,j,runningsum / IntSamples); //removed .toFloat() from IntSamples
       while (micros() <= timer + DB[6].toInt());
     }
   }
@@ -812,7 +812,7 @@ void ACQ(std::vector<String> DB,int nCh)
     {
       int timer = micros();
       quadWriteToBuffer(bufferv,j,getSingleReading(fixMapADC(0)), getSingleReading(fixMapADC(1)), getSingleReading(fixMapADC(2)), getSingleReading(fixMapADC(3)));
-      while (micros() <= timer + StepDelay);
+      while (micros() <= timer + DB[6].toInt());
     }
   }
 
@@ -859,12 +859,12 @@ void sinw(std::vector<String> DB)
     while (micros() <= timer + interval);
   }
 }
-
+/*
 void SRAMF(std::vector<String> DB)
 {
   Serial.println(String(freeMemory()));
 }
-
+*/
 
   void router(std::vector<String> DB)
   {
@@ -952,7 +952,7 @@ void SRAMF(std::vector<String> DB)
        RAR(DB,4);
        break;
      case 15: // Print Free SRAM
-       SRAMF(DB);
+       //SRAMF(DB);
        break;
      case 16: //Acquire 1 ch
        ACQ(DB,1);
