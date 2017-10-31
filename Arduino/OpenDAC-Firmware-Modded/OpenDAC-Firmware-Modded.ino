@@ -68,14 +68,37 @@ void linearReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
     Serial.flush();
     if (linpos != linlen - 1)
     {
-      Serial.print(',');
+      Serial.print('\n');
     }
   }
   Serial.println(' ');
 }
 
-//Reads buffer out in 4 lines (1/ch):
+//Reads buffer out in 4 columns (ch: 0  1  2  3):
 void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
+{
+
+  for (int ypos = 0; ypos < linlen; ypos++)
+  {
+    for(int xpos = 0;xpos<bufferv_xdim;xpos++)
+    {
+      Serial.print(arr[xpos][ypos]);
+      Serial.flush();
+      if (xpos != bufferv_xdim - 1)
+      {
+        Serial.print(',');
+      }
+      else
+      {
+        Serial.print("\n");
+      }
+    }
+    //Serial.println(' ');
+  }
+}
+
+//Reads buffer out in 4 lines (1/ch):
+void quadReadBufferOLD(float arr[bufferv_xdim][bufferv_ydim],int linlen)
 {
   for(int xpos = 0;xpos<bufferv_xdim;xpos++)
   {
@@ -759,71 +782,70 @@ void RAR(std::vector<String> DB,int nCh)
   clearbuffer(bufferv);
 }
 
-//Acquire over time CollectTime (seconds) with sample rate SampleRate(Hz) and integration time IntTime(microsec).
+//Acquire over time nSamples with time sampleStep(s) between each sample
 //Two Serial term syntaxes based on selection of 1 ch or quad acquire
-//Syntax: ACQ1,ADC#,ACQTime,SampleRate,IntTime
+//Syntax: ACQ1,ADC#,nSamples,sampleStep
+//Syntax: ACQ4,nSamples,sampleStep
 void ACQ(std::vector<String> DB,int nCh)
 {
-  /*
-  Serial.println("Collection Time  : " + String(CollectTime) + " microseconds.");
-  Serial.println("       -> samples: " + String(nSteps) + " samples.");
-  Serial.println("Sample Rate      : " + String(SampleRate) + "1/us");
-  Serial.println("Integration      : " + String(IntSamples) + " samples over " + String(IntTime) + "us");
-  */
-
+  int nSamplesToRead = 0;
 //Read from ADC
   if(nCh == 1)
   {
+    Serial.println("Acq1");
+    //Syntax: ACQ1,ADC#,nSamples,sampleStep
     //Converting serial string into variables:
     int adcChannel = fixMapADC(DB[1].toInt());
-    float CollectTime = DB[2].toFloat() * 1000000; // Input seconds but internally microsec
-    float SampleRate = DB[3].toFloat() / 1000000; //Input Hz but internally 1/microsec
-    float IntTime = DB[4].toFloat();  //Input microsec, internally microsec
-    int IntSamples = floor(IntTime / SampleRate);
-    int nSteps = floor(CollectTime / SampleRate);
-    float IntermediateSamples[IntSamples]; //Pre-Averaged samples
+    int nSamples = DB[2].toInt(); // Input seconds but internally microsec
+    float sampleStep = DB[3].toFloat()*1000000.0; //Time between each sample (1/f) (input: seconds)
 
+    //Since 1 channel, can have bufferv_xdim*bufferv_ydim samples! Check.
+    if (nSamples>(bufferv_xdim*bufferv_ydim))
+    {
+      nSamples = bufferv_xdim*bufferv_ydim;
+    }
+    nSamplesToRead = nSamples;
+    
     //Ramp through values and save into buffer
-    for (int j = 0; j < nSteps; j++)
+    for (int j = 0; j < nSamples; j++)
     {
       int timer = micros();
-      int runningsum = 0;
-      //Loop for averaging
-      for(int k = 0; k < IntSamples; k++)
-      {
-        runningsum += getSingleReading(adcChannel);
-        while (micros() <= timer + DB[6].toFloat()/(k*IntSamples));//removed .toFloat() from IntSamples
-      }
-      linearWriteToBuffer(bufferv,j,runningsum / IntSamples); //removed .toFloat() from IntSamples
-      while (micros() <= timer + DB[6].toInt());
+      linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel));
+      while (micros() <= timer + sampleStep);
     }
   }
+  
   else
   {
+    //Syntax: ACQ4,nSamples,sampleStep
     //Converting serial string into variables:
-    float CollectTime = DB[1].toFloat() * 1000000; // Input seconds but internally microsec
-    float SampleRate = DB[2].toFloat() / 1000000; //Input Hz but internally 1/microsec
-    float IntTime = DB[3].toFloat();  //Input microsec, internally microsec
-    int IntSamples = IntTime / SampleRate;
-    int nSteps = CollectTime / SampleRate;
+    int nSamples = DB[1].toInt(); // Input seconds but internally microsec
+    float sampleStep = DB[2].toFloat()*1000000.0; //Time between each sample (1/f) (input: seconds)
 
+    //Since 4 channels, can havebufferv_ydim samples! Check and Correct
+    if (nSamples>(bufferv_ydim))
+    {
+      nSamples = bufferv_ydim;
+    }
+    nSamplesToRead = nSamples;
+    
     //Read from ADC
-    for (int j = 0; j < nSteps; j++)
+    for (int j = 0; j < nSamples; j++)
     {
       int timer = micros();
       quadWriteToBuffer(bufferv,j,getSingleReading(fixMapADC(0)), getSingleReading(fixMapADC(1)), getSingleReading(fixMapADC(2)), getSingleReading(fixMapADC(3)));
-      while (micros() <= timer + DB[6].toInt());
+      while (micros() <= timer + sampleStep);
     }
   }
 
   //Read out buffer:
   if(nCh == 1)
   {
-    linearReadBuffer(bufferv,DB[5].toInt());
+    linearReadBuffer(bufferv,nSamplesToRead);
   }
   else
   {
-    quadReadBuffer(bufferv,DB[9].toInt());
+    quadReadBuffer(bufferv,nSamplesToRead);
   }
 
   //Clear buffer:
