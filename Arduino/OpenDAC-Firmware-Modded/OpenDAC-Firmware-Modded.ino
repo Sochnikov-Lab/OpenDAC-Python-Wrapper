@@ -1,6 +1,8 @@
 //Ardunio *DUE*code for controlling EVAL-AD7734 ADC and EVAL-AD5764 DAC
 //Created by Andrea Young
 //Modified by Carlos Kometter 7/7/2015
+//Modified by Joe Sheldon 11/03/2017
+
 #include "SPI.h" // necessary library for SPI communication
 #include <vector>
 //include <MemoryFree.h>;
@@ -64,14 +66,14 @@ void linearReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
     xpos = floor(linpos / bufferv_ydim);
     ypos = linpos - (xpos * bufferv_ydim);
 
-    Serial.print(arr[xpos][ypos]);
+    Serial.print(arr[xpos][ypos],5);
     Serial.flush();
     if (linpos != linlen - 1)
     {
       Serial.print('\n');
     }
   }
-  Serial.println(' ');
+  //Serial.println(' ');
 }
 
 //Reads buffer out in 4 columns (ch: 0  1  2  3):
@@ -82,7 +84,7 @@ void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
   {
     for(int xpos = 0;xpos<bufferv_xdim;xpos++)
     {
-      Serial.print(arr[xpos][ypos]);
+      Serial.print(arr[xpos][ypos],5);
       Serial.flush();
       if (xpos != bufferv_xdim - 1)
       {
@@ -94,25 +96,6 @@ void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
       }
     }
     //Serial.println(' ');
-  }
-}
-
-//Reads buffer out in 4 lines (1/ch):
-void quadReadBufferOLD(float arr[bufferv_xdim][bufferv_ydim],int linlen)
-{
-  for(int xpos = 0;xpos<bufferv_xdim;xpos++)
-  {
-    //Print out voltages in a single, comma delimited line
-    for (int ypos = 0; ypos < linlen; ypos++)
-    {
-      Serial.print(arr[xpos][ypos]);
-      Serial.flush();
-      if (ypos != linlen - 1)
-      {
-        Serial.print(',');
-      }
-    }
-    Serial.println(' a');
   }
 }
 
@@ -792,7 +775,6 @@ void ACQ(std::vector<String> DB,int nCh)
 //Read from ADC
   if(nCh == 1)
   {
-    Serial.println("Acq1");
     //Syntax: ACQ1,ADC#,nSamples,sampleStep
     //Converting serial string into variables:
     int adcChannel = fixMapADC(DB[1].toInt());

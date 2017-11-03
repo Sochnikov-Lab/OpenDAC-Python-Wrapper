@@ -10,7 +10,18 @@ class ODAC(object):
         self.ser = serial.Serial() #Serial Instance
         self.ser.timeout = 0.25 #read timeout --Should fix this to get rid of latency
         self.serIO = io.TextIOWrapper(io.BufferedRWPair(self.ser,self.ser),newline='\r\n')
-        self.adcbuffer = {}
+
+        self.adctimes = []
+        #Single CH acquire buffer:
+        self.adcbuffer = []
+        self.adc1rec = -1 #What channel was read. -1 means not read yet. -2 means all were read.
+
+        #Quad CH acquire buffers:
+        self.adcbuffer0 = []
+        self.adcbuffer1 = []
+        self.adcbuffer2 = []
+        self.adcbuffer3 = []
+
     #Attempts to open serial instance
     def open(self,COMPORT,BAUDRATE=115200,verbose=0):
         try:
@@ -87,7 +98,97 @@ class ODAC(object):
         commandstr = 'SIN,' + str(dac) + ',' + str(v0) + ',' + str(angfreq) + ',' + str(phase) + ',' + str(offset) + ',' + str(nsteps) + ',' + str(interval) + '\n'
         #print commandstr
         self.serIO.write(unicode(commandstr))
+    def acquireOne(self,adc,nSteps,stepSize):
+        self.adc1rec = adc
+        #Clear buffers:
+        self.adctimes[:] = []
+        self.adcbuffer[:] = []
+        self.adcbuffer0[:] = []
+        self.adcbuffer1[:] = []
+        self.adcbuffer2[:] = []
+        self.adcbuffer3[:] = []
+        commandstr = 'ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n'
+        self.serIO.write(unicode(commandstr)) #Send command
+        self.serIO.flush()
 
-    #acquire readings with sample rate 'SampleRate' (samples per microsecond) over time 'CollectPeriod' (microseconds):
-    #with Integration time IntTime
-    #def acq1(self,adc1,CollectPeriod,SampleRate,IntTime):
+
+        self.ser.timeout = nSteps*stepSize+1.0
+        print("Acquire for: " + str(self.ser.timeout) + " sec")
+
+        adcbuffer_full_str = str(self.serIO.read(nSteps*10)) #Full buffer string
+
+        self.ser.timeout = 0.25 #return to default timeout
+        #Decompose full list string to rows:
+        adcbuffer_row_str = adcbuffer_full_str.split("\n")
+
+        #convert list into list of values:
+        for i in range(0,len(adcbuffer_row_str)):
+            self.adctimes.append(i*stepSize)
+            self.adcbuffer.append(float(adcbuffer_row_str[i]))
+
+        #cleanup:
+        del adcbuffer_full_str
+        del adcbuffer_row_str
+
+
+    def acquireAll(self,nSteps,stepSize):
+
+        self.adc1rec = - 2
+        #Clear buffers
+        self.adcbuffer[:] = []
+        self.adcbuffer0[:] = []
+        self.adcbuffer1[:] = []
+        self.adcbuffer2[:] = []
+        self.adcbuffer3[:] = []
+        commandstr = 'ACQA,' + str(nSteps) + ',' + str(stepSize) + '\n'
+        self.serIO.write(unicode(commandstr))
+        self.serIO.flush()
+
+        self.ser.timeout = nSteps*stepSize+1.0
+        print("Acquire for: " + str(self.ser.timeout) + " sec")
+        adcbuffer_full_str = str(self.serIO.read(nSteps*46)) #Full buffer string
+        self.ser.timeout = 0.25 #return to default timeout
+
+        #Decompose full list string to rows:
+        adcbuffer_row_str = adcbuffer_full_str.split("\n")
+        #adcbuffer_row_str[0].split(',')[1] EXAMPLE OF: voltage for row 0 ch 1
+
+        #convert each line into list of values, append values to buffers:
+        for step in range(0,len(adcbuffer_row_str)-1):
+            #print rowstr2
+            #Convert each element into a float, save to buffer:
+            self.adcbuffer0.append(float(adcbuffer_row_str[step].split(',')[0]))
+            self.adcbuffer1.append(float(adcbuffer_row_str[step].split(',')[1]))
+            self.adcbuffer2.append(float(adcbuffer_row_str[step].split(',')[2]))
+            self.adcbuffer3.append(float(adcbuffer_row_str[step].split(',')[3]))
+            #Append times:
+            self.adctimes.append(step*stepSize)
+
+        print(self.adcbuffer0)
+
+    def saveToFile(self,filename):
+        #datastructure:
+        #time,ch0,ch1,ch2,ch3"
+
+        datafile = open(filename,'w')
+        datafile.write("time(s),ch0(V),ch1(V),ch2(V),ch3(V)\n")
+
+        #Check sizes of buffers, determine what chs are recorded:
+        if self.adc1rec == 0:    #CH0 recorded
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer[i]) +",,,\n")
+        if self.adc1rec == 1:#CH1 recorded
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + ",," + str(self.adcbuffer[i]) +",,\n")
+        if self.adc1rec == 2:#CH2 recorded
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + ",,," + str(self.adcbuffer[i]) +",\n")
+        if self.adc1rec == 3:#CH3 recorded
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
+        if self.adc1rec == -1:#NOTHING recorded
+            print "User Error: No data collected"
+        if self.adc1rec == -2:#ALL recorded
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+        datafile.close()
