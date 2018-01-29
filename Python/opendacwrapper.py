@@ -84,6 +84,9 @@ class ODAC(object):
     def setDAC(self,channel,voltage):
         self.serIO.write(unicode('SET,'+ str(channel) +',' + str(voltage) + '\r'))
         self.serIO.flush()
+    def setConvTime(self,channel,convTime): #microseconds. Default is something like 900us
+        self.serIO.write(unicode('CONVERT_TIME,'+ str(channel) + "," + str(convTime) + '\r'))
+        self.serIO.flush()
     def ramp1(self,adc,dac,v1,v2,steps,interval):
         self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
@@ -108,24 +111,27 @@ class ODAC(object):
         self.adcbuffer2[:] = []
         self.adcbuffer3[:] = []
         commandstr = 'ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n'
+        print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
+        self.serIO.flush()
         self.serIO.write(unicode(commandstr)) #Send command
         self.serIO.flush()
 
 
-        self.ser.timeout = nSteps*stepSize+1.0
-        print("Acquire for: " + str(self.ser.timeout) + " sec")
+        self.ser.timeout = nSteps*stepSize+5.0
 
-        adcbuffer_full_str = str(self.serIO.read(nSteps*10)) #Full buffer string
+
+        adcbuffer_full_str = str(self.serIO.read(nSteps*13)) #Full buffer string
 
         self.ser.timeout = 0.25 #return to default timeout
         #Decompose full list string to rows:
         adcbuffer_row_str = adcbuffer_full_str.split("\n")
 
         #convert list into list of values:
-        for i in range(0,len(adcbuffer_row_str)):
+        #for i in range(0,len(adcbuffer_row_str)):
+        for i in range(0,nSteps):
             self.adctimes.append(i*stepSize)
             self.adcbuffer.append(float(adcbuffer_row_str[i]))
-
+        #self.adctimes = np.linspace(0,stepSize*nSteps,num=nSteps)
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
@@ -146,7 +152,7 @@ class ODAC(object):
 
         self.ser.timeout = nSteps*stepSize+1.0
         print("Acquire for: " + str(self.ser.timeout) + " sec")
-        adcbuffer_full_str = str(self.serIO.read(nSteps*46)) #Full buffer string
+        adcbuffer_full_str = str(self.serIO.read(nSteps*52)) #Full buffer string
         self.ser.timeout = 0.25 #return to default timeout
 
         #Decompose full list string to rows:

@@ -66,7 +66,7 @@ void linearReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
     xpos = floor(linpos / bufferv_ydim);
     ypos = linpos - (xpos * bufferv_ydim);
 
-    Serial.print(arr[xpos][ypos],5);
+    Serial.print(arr[xpos][ypos],8);
     Serial.flush();
     if (linpos != linlen - 1)
     {
@@ -84,7 +84,7 @@ void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
   {
     for(int xpos = 0;xpos<bufferv_xdim;xpos++)
     {
-      Serial.print(arr[xpos][ypos],5);
+      Serial.print(arr[xpos][ypos],8);
       Serial.flush();
       if (xpos != bufferv_xdim - 1)
       {
@@ -271,7 +271,8 @@ void writeADCConversionTime(std::vector<String> DB)
   cr = SPI.transfer(adc, 0); //Read back the CT register
 
   int convtime = ((int)(((cr & 127) * 128 + 249) / 6.144) + 0.5);
-  Serial.println(convtime);
+  //Serial.println(convtime);
+  //Serial.print("\n");
 }
 
 float map2(float x, long in_min, long in_max, float out_min, float out_max)
