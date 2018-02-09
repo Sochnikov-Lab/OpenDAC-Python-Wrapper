@@ -10,7 +10,7 @@ ODAQ1.setConvTime(1,82)
 ODAQ1.setConvTime(2,82)
 ODAQ1.setConvTime(3,82)
 
-ODAQ1.acquireOne(0,20000,0.0002)
+ODAQ1.acquireOne(0,2000,0.0001)
 #ODAQ1.acquireAll(1000,0.00100)
 ODAQ1.saveToFile("data.csv")
 

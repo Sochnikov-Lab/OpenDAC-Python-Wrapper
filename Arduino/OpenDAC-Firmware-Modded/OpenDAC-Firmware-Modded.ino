@@ -16,8 +16,8 @@ int drdy = 48; // Data is ready pin on ADC
 int led = 32;
 int data = 28; //Used for trouble shooting; connect an LED between pin 13 and GND
 int err = 30;
-const int Noperations = 17;
-String operations[Noperations] = {"NOP", "SET", "GET_ADC", "RAMP1", "RAMP2", "BUFFER_RAMP", "RESET", "TALK", "CONVERT_TIME", "*IDN?", "*RDY?", "RAR1", "SIN", "ACQA","RARA","SRAMF","ACQ1"};
+const int Noperations = 18;
+String operations[Noperations] = {"NOP", "SET", "GET_ADC", "RAMP1", "RAMP2", "BUFFER_RAMP", "RESET", "TALK", "CONVERT_TIME", "*IDN?", "*RDY?", "RAR1", "SIN", "ACQA","RARA","SRAMF","ACQ1","SIN4"};
 
 //Custom Buffer Functions. Buffer should be in the stack.
 const int bufferv_xdim = 4;
@@ -842,7 +842,7 @@ void ACQ(std::vector<String> DB,int nCh)
 }
 
 //Sine Wave out
-//Syntax: SIN,DAC#,V0,ANGFREQ(rads/sec),PHASE(radians),OFFSET,steps/ms,duration(ms)
+//Syntax: SIN,DAC#,V0,ANGFREQ(rads/sec),PHASE(radians),OFFSET,duration(ms)
 void sinw(std::vector<String> DB)
 {
   int dacChannel = DB[1].toInt();
@@ -850,18 +850,58 @@ void sinw(std::vector<String> DB)
   float w = DB[3].toFloat();
   float phi = DB[4].toFloat();
   float vdc = DB[5].toFloat();
-  int nSteps = DB[6].toInt();
-  float interval = DB[7].toFloat();
-  float value[nSteps];
-
-
+  float interval = DB[6].toFloat();
+  /*
   for (int j = 0; j < nSteps; j++)
   {
     float timer = micros();
     digitalWrite(data, HIGH);
     writeDAC(dacChannel, vdc + v0 * sin(((w * interval * j) / 1000.0) + phi));
+    writeDAC(dacChannel, vdc + v0 * sin(((w * timer) / 1000.0) + phi));
     digitalWrite(data, LOW);
     while (micros() <= timer + interval);
+  }
+  */
+  float timer0 = micros(); //Time at start of wave
+  while((micros() - timer0) <= interval*1000.0) // run only when wave ran for the requested interval
+  {
+    digitalWrite(data, HIGH);
+    writeDAC(dacChannel, vdc + v0 * sin(w * ((micros()-timer0)/ 1000000.0) + phi));
+    digitalWrite(data, LOW);
+  }
+}
+//Sine Wave out
+//Syntax: SIN,DAC#,V0,ANGFREQ(rads/sec),PHASE(radians),OFFSET,duration(ms)
+void sinw4(std::vector<String> DB)
+{
+  float v00 = DB[1].toFloat();
+  float v01 = DB[2].toFloat();
+  float v02 = DB[3].toFloat();
+  float v03 = DB[4].toFloat();
+  float w0 = DB[5].toFloat();
+  float w1 = DB[6].toFloat();
+  float w2 = DB[7].toFloat();
+  float w3 = DB[8].toFloat();
+  float phi0 = DB[9].toFloat();
+  float phi1 = DB[10].toFloat();
+  float phi2 = DB[11].toFloat();
+  float phi3 = DB[12].toFloat();
+  float vdc0 = DB[13].toFloat();
+  float vdc1 = DB[14].toFloat();
+  float vdc2 = DB[15].toFloat();
+  float vdc3 = DB[16].toFloat();
+  float interval = DB[17].toFloat();
+
+  //Suggest to use pre-computed table for sine waves to avoid the phase delays(120us)
+  float timer0 = micros(); //Time at start of wave
+  while((micros() - timer0) <= interval*1000.0) // run only when wave ran for the requested interval
+  {
+    digitalWrite(data, HIGH);
+    writeDAC(0, vdc0 + v00 * sin(w0 * ((micros()-timer0)/ 1000000.0) + phi0));
+    writeDAC(1, vdc1 + v01 * sin(w1 * ((micros()-timer0-120)/ 1000000.0) + phi1)); //-120us attempt to fix phase offset.
+    writeDAC(2, vdc2 + v02 * sin(w2 * ((micros()-timer0-240)/ 1000000.0) + phi2));
+    writeDAC(3, vdc3 + v03 * sin(w2 * ((micros()-timer0-360)/ 1000000.0) + phi3));
+    digitalWrite(data, LOW);
   }
 }
 /*
@@ -961,6 +1001,9 @@ void SRAMF(std::vector<String> DB)
        break;
      case 16: //Acquire 1 ch
        ACQ(DB,1);
+       break;
+     case 17:
+       sinw4(DB);
        break;
 
     default:

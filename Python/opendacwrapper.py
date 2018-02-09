@@ -82,7 +82,10 @@ class ODAC(object):
         self.serIO.flush()
         return str(self.serIO.readline()).rstrip()
     def setDAC(self,channel,voltage):
-        self.serIO.write(unicode('SET,'+ str(channel) +',' + str(voltage) + '\r'))
+        if voltage > -10 and voltage < 10:
+            self.serIO.write(unicode('SET,'+ str(channel) +',' + str(voltage) + '\r'))
+        else:
+            print("DAC Voltage range setting for ch" + str(channel) + " exceeds specification (-10V to +10V)")
         self.serIO.flush()
     def setConvTime(self,channel,convTime): #microseconds. Default is something like 900us
         self.serIO.write(unicode('CONVERT_TIME,'+ str(channel) + "," + str(convTime) + '\r'))
@@ -97,9 +100,11 @@ class ODAC(object):
         #for i in range(0,len(self.adcbuffer)):
         #    self.adcbuffer[i] = float(self.adcbuffer[i])
     #output a sine wave on one channel
-    def sine(self,dac,v0,angfreq,phase,offset,nsteps,interval):
-        commandstr = 'SIN,' + str(dac) + ',' + str(v0) + ',' + str(angfreq) + ',' + str(phase) + ',' + str(offset) + ',' + str(nsteps) + ',' + str(interval) + '\n'
-        #print commandstr
+    def sine(self,dac,v0,angfreq,phase,offset,interval):
+        commandstr = 'SIN,' + str(dac) + ',' + str(v0) + ',' + str(angfreq) + ',' + str(phase) + ',' + str(offset) + ',' + str(interval) + '\n'
+        self.serIO.write(unicode(commandstr))
+    def sine4(self,v00,v01,v02,v03,angfreq0,angfreq1,angfreq2,angfreq3,phase0,phase1,phase2,phase3,offset0,offset1,offset2,offset3,interval):
+        commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))
     def acquireOne(self,adc,nSteps,stepSize):
         self.adc1rec = adc
