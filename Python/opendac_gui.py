@@ -22,13 +22,16 @@ class openDAC_UI(QMainWindow):
         self.ui.butta1_start.clicked.connect(self.ACQ1Start)
         self.ui.lea1_samples.setText("20000")
         self.ui.lea1_srate.setText("2000")
-        self.ui.lea1_inttime.setEnabled(False)
+
+        #ACQ2 Related Widgets
+        self.ui.butta2_start.clicked.connect(self.ACQ2Start)
+        self.ui.lea2_samples.setText("10000")
+        self.ui.lea2_srate.setText("2000")
+
         #ACQ4 Related Widgets
         self.ui.butta4_start.clicked.connect(self.ACQ4Start)
         self.ui.lea4_samples.setText("5000")
         self.ui.lea4_srate.setText("2000")
-
-        self.ui.lea4_inttime.setEnabled(False)
         #RAR1 Related Widgets
         self.ui.buttrr1_start.clicked.connect(self.RAR1Start)
         #RAR4 Related Widgets
@@ -101,6 +104,14 @@ class openDAC_UI(QMainWindow):
                 print("Acquire Halted: too many samples (max 20000) or sample rate too fast (max 2kHz)")
         except ValueError:
             print("Error: Issue with values given.")
+
+    #ACQ2 Event Handlers
+    def ACQ2Start(self):
+        print("Acquire 2")
+        if not ((self.ui.rba2_ch0A.isChecked() and self.ui.rba2_ch0B.isChecked()) or (self.ui.rba2_ch1A.isChecked() and self.ui.rba2_ch1B.isChecked()) or (self.ui.rba2_ch2A.isChecked() and self.ui.rba2_ch2B.isChecked()) or (self.ui.rba2_ch3A.isChecked() and self.ui.rba2_ch3B.isChecked())):
+            print("Channel Selection Okay")
+        else:
+            print("Error: Incorrect Channel Selection.")
     #ACQ4 Event Handlers
     def ACQ4Start(self):
         try:

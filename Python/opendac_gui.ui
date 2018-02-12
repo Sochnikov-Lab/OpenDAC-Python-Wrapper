@@ -66,19 +66,19 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
-       <string>Acq1</string>
+       <string>A1</string>
       </attribute>
       <widget class="QWidget" name="gridLayoutWidget">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>110</y>
+         <y>144</y>
          <width>361</width>
-         <height>95</height>
+         <height>61</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -113,22 +113,6 @@
            <string>Sample Rate (Hz):</string>
           </property>
          </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Integration Time (us):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lea1_inttime"/>
         </item>
        </layout>
       </widget>
@@ -256,9 +240,183 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QWidget" name="tab_10">
+      <attribute name="title">
+       <string>A2</string>
+      </attribute>
+      <widget class="QWidget" name="gridLayoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>144</y>
+         <width>361</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_43">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Samples:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lea2_samples"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lea2_srate"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_44">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Sample Rate (Hz):</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget_8">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>70</y>
+         <width>261</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <item>
+         <widget class="QLabel" name="label_46">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>ADC Ch:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch0A">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch1A">
+          <property name="text">
+           <string>1</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch2A">
+          <property name="text">
+           <string>2</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch3A">
+          <property name="text">
+           <string>3</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="butta2_start">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>261</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>START</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget_9">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>261</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <item>
+         <widget class="QLabel" name="label_47">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>ADC Ch:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch0B">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch1B">
+          <property name="text">
+           <string>1</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch2B">
+          <property name="text">
+           <string>2</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rba2_ch3B">
+          <property name="text">
+           <string>3</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
      <widget class="QWidget" name="tab_9">
       <attribute name="title">
-       <string>Acq4</string>
+       <string>A4</string>
       </attribute>
       <widget class="QWidget" name="verticalLayoutWidget_4">
        <property name="geometry">
@@ -331,9 +489,9 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>110</y>
+         <y>144</y>
          <width>361</width>
-         <height>95</height>
+         <height>61</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
@@ -369,28 +527,12 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_41">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Integration Time (us):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lea4_inttime"/>
-        </item>
        </layout>
       </widget>
      </widget>
      <widget class="QWidget" name="tab_8">
       <attribute name="title">
-       <string>R&amp;&amp;R1</string>
+       <string>RR1</string>
       </attribute>
       <widget class="QLabel" name="label_33">
        <property name="geometry">
@@ -537,7 +679,7 @@
      </widget>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
-       <string>R&amp;&amp;R4</string>
+       <string>RR4</string>
       </attribute>
       <widget class="QPushButton" name="buttrr4_start">
        <property name="geometry">
@@ -628,7 +770,7 @@
      </widget>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
-       <string>Data Output</string>
+       <string>Data Out</string>
       </attribute>
       <widget class="QPushButton" name="butts_csv">
        <property name="geometry">
