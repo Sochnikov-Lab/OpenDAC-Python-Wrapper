@@ -78,7 +78,7 @@
          <x>10</x>
          <y>110</y>
          <width>361</width>
-         <height>89</height>
+         <height>95</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -151,7 +151,7 @@
          <x>280</x>
          <y>10</y>
          <width>91</width>
-         <height>80</height>
+         <height>83</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -266,7 +266,7 @@
          <x>280</x>
          <y>10</y>
          <width>91</width>
-         <height>80</height>
+         <height>83</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -333,7 +333,7 @@
          <x>10</x>
          <y>110</y>
          <width>361</width>
-         <height>89</height>
+         <height>95</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
@@ -486,7 +486,7 @@
          <x>280</x>
          <y>10</y>
          <width>91</width>
-         <height>80</height>
+         <height>83</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -577,7 +577,7 @@
          <x>280</x>
          <y>10</y>
          <width>91</width>
-         <height>80</height>
+         <height>83</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -644,48 +644,58 @@
        </property>
       </widget>
       <widget class="QPushButton" name="butts_plot">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>190</x>
          <y>10</y>
          <width>181</width>
-         <height>81</height>
+         <height>41</height>
         </rect>
        </property>
        <property name="text">
-        <string>Plot (matplotlib)</string>
+        <string>Time Trace</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="butts_reset">
+      <widget class="QPushButton" name="butts_pds">
        <property name="enabled">
         <bool>false</bool>
        </property>
        <property name="geometry">
         <rect>
          <x>190</x>
-         <y>100</y>
+         <y>50</y>
          <width>181</width>
-         <height>81</height>
+         <height>41</height>
         </rect>
        </property>
        <property name="text">
-        <string>Reset DAC/ADC</string>
+        <string>PDS Plot</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="butts_clear">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
+      <widget class="QLineEdit" name="leout_fname">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>100</y>
-         <width>171</width>
-         <height>81</height>
+         <x>70</x>
+         <y>180</y>
+         <width>251</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>160</y>
+         <width>201</width>
+         <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>Clear PC Buffer</string>
+        <string>File Description:</string>
        </property>
       </widget>
      </widget>
@@ -815,8 +825,8 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>561</width>
-         <height>145</height>
+         <width>577</width>
+         <height>153</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -1031,7 +1041,7 @@
          <x>350</x>
          <y>10</y>
          <width>221</width>
-         <height>61</height>
+         <height>62</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_8">
@@ -1074,7 +1084,7 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>321</width>
+         <width>335</width>
          <height>31</height>
         </rect>
        </property>
@@ -1203,7 +1213,7 @@
          <x>10</x>
          <y>10</y>
          <width>311</width>
-         <height>151</height>
+         <height>153</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_6">
@@ -1319,7 +1329,7 @@
          <x>350</x>
          <y>10</y>
          <width>221</width>
-         <height>61</height>
+         <height>62</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_7">
@@ -1497,22 +1507,7 @@
        <height>31</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Task Progress:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="pbar_task">
-        <property name="value">
-         <number>24</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <layout class="QHBoxLayout" name="horizontalLayout_2"/>
     </widget>
    </widget>
   </widget>

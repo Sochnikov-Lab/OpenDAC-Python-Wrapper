@@ -63,6 +63,7 @@ class ODAC(object):
     def close(self,verbose=0):
         try:
             self.ser.close()
+            self.ready = False
             if self.ser.is_open == False and verbose == 1:
                 print("**Successfully closed serial port**")
         except serial.SerialException:
@@ -146,6 +147,7 @@ class ODAC(object):
 
         self.adc1rec = - 2
         #Clear buffers
+        self.adctimes[:] = []
         self.adcbuffer[:] = []
         self.adcbuffer0[:] = []
         self.adcbuffer1[:] = []
@@ -156,7 +158,7 @@ class ODAC(object):
         self.serIO.flush()
 
         self.ser.timeout = nSteps*stepSize+1.0
-        print("Acquire for: " + str(self.ser.timeout) + " sec")
+        print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
         adcbuffer_full_str = str(self.serIO.read(nSteps*52)) #Full buffer string
         self.ser.timeout = 0.25 #return to default timeout
 
@@ -175,7 +177,7 @@ class ODAC(object):
             #Append times:
             self.adctimes.append(step*stepSize)
 
-        print(self.adcbuffer0)
+        #print(self.adcbuffer0)
 
     def saveToFile(self,filename):
         #datastructure:
