@@ -91,12 +91,19 @@ class ODAC(object):
     def setConvTime(self,channel,convTime): #microseconds. Default is something like 900us
         self.serIO.write(unicode('CONVERT_TIME,'+ str(channel) + "," + str(convTime) + '\r'))
         self.serIO.flush()
-    def ramp1(self,adc,dac,v1,v2,steps,interval):
+    def ramp1(self,dac,v1,v2,steps,interval):
+        self.serIO.write(unicode('RAMP1,'+ str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
+        self.serIO.flush()
+    def ramp2(self,dac1,dac2,v1i,v2i,v1f,v2f,steps,interval):
+        self.serIO.write(unicode('RAMP2,'+ str(dac) + ',' + str(v1i) + ',' + str(v2i) + ',' + str(v1f) + ',' + str(v2f) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
+        self.serIO.flush()
+    def rampread1(self,adc,dac,v1,v2,steps,interval):
+        self.adcbuffer[:] = []
         self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
         adcbufferstr = str(self.serIO.readline()).rstrip().lstrip() #read ascii from serial port
         self.serIO.flush()
-        print(adcbufferstr)
+        #print(adcbufferstr)
         self.adcbuffer = adcbufferstr.split(',') #break string into a list
         #for i in range(0,len(self.adcbuffer)):
         #    self.adcbuffer[i] = float(self.adcbuffer[i])
