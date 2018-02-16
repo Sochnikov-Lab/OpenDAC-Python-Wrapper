@@ -7,6 +7,11 @@ from opendacwrapper import ODAC
 from time import sleep
 from math import pi
 
+class aboutWindow_UI(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.ui = uic.loadUi("aboutwindow.ui")
+
 class openDAC_UI(QMainWindow):
     def __init__(self,myODAC):
         QMainWindow.__init__(self)
@@ -14,6 +19,7 @@ class openDAC_UI(QMainWindow):
         self.DAC = myODAC
         #Bindings:
         #self.BUTTON.clicked.connect(self.BUTTONCLICKEDFUNC)
+        self.ui.aboutButton.clicked.connect(self.about)
 
         #Serial Related Widgets
         self.ui.buttsp_conn.clicked.connect(self.serialConnect)
@@ -54,7 +60,9 @@ class openDAC_UI(QMainWindow):
         self.ui.leout_fname.setText("data")
 
     #def BUTTONCLICKEDFUNC(self):
-
+    def about(self):
+        aboutWindow = aboutWindow_UI()
+        aboutWindow.ui.show()
     #Serial Connection Event Handlers
     def serialConnect(self):#Evt Handler for serial connect button
 
@@ -105,7 +113,7 @@ class openDAC_UI(QMainWindow):
 
     #ACQ2 Event Handlers
     def ACQ2Start(self):
-        print("Acquire 2")
+        print("Error: 2Ch Acquisition Not Implemented Yet")
         if not ((self.ui.rba2_ch0A.isChecked() and self.ui.rba2_ch0B.isChecked()) or (self.ui.rba2_ch1A.isChecked() and self.ui.rba2_ch1B.isChecked()) or (self.ui.rba2_ch2A.isChecked() and self.ui.rba2_ch2B.isChecked()) or (self.ui.rba2_ch3A.isChecked() and self.ui.rba2_ch3B.isChecked())):
             print("Channel Selection Okay")
         else:
@@ -127,10 +135,10 @@ class openDAC_UI(QMainWindow):
             print("Error: Issue with values given.")
     #RAR1 Event Handlers
     def RAR1Start(self):
-        print("Ramp and Read 1 Started")
+        print("Error: Ramp and Read 1 Not Implemented Yet")
     #RAR4 Event Handlers
     def RAR4Start(self):
-        print("Ramp and Read 4 Started")
+        print("Error: Ramp and Read 4 Not Implemented Yet")
     #DCOut Event Handlers
     def DCSetCH0(self):
         if self.DAC.ready == True:

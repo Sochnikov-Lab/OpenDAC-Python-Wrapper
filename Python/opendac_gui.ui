@@ -11,7 +11,7 @@
     <x>0</x>
     <y>0</y>
     <width>859</width>
-    <height>359</height>
+    <height>360</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1433,6 +1433,19 @@
        </widget>
       </item>
      </layout>
+    </widget>
+    <widget class="QPushButton" name="aboutButton">
+     <property name="geometry">
+      <rect>
+       <x>760</x>
+       <y>30</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>About</string>
+     </property>
     </widget>
    </widget>
   </widget>
