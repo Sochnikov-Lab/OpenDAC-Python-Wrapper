@@ -83,10 +83,11 @@ class ODAC(object):
         self.serIO.flush()
         return str(self.serIO.readline()).rstrip()
     def setDAC(self,channel,voltage):
-        if voltage > -10 and voltage < 10:
+        if voltage >= -10 and voltage <= 10:
             self.serIO.write(unicode('SET,'+ str(channel) +',' + str(voltage) + '\r'))
         else:
-            print("DAC Voltage range setting for ch" + str(channel) + " exceeds specification (-10V to +10V)")
+            print("Warning: DAC Voltage range setting for ch" + str(channel) + " exceeds specification (-10V to +10V)")
+            print("         *No Change*")
         self.serIO.flush()
     def setConvTime(self,channel,convTime): #microseconds. Default is something like 900us
         self.serIO.write(unicode('CONVERT_TIME,'+ str(channel) + "," + str(convTime) + '\r'))

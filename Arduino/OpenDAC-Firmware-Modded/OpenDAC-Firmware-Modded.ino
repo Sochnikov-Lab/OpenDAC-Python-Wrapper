@@ -36,7 +36,7 @@ void clearbuffer(float arr[bufferv_xdim][bufferv_ydim])
   }
 }
 
-//linearly writes to buffer.
+//linearly writes to buffer. (1ch acq)
 void linearWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int linpos,float valToWrite)
 {
   int xidx = floor( linpos / bufferv_ydim);
@@ -44,7 +44,29 @@ void linearWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int linpos,float 
 
   arr[xidx][yidx] = valToWrite;
 }
-//writes 4 values to buffer.
+
+//doubly writes to buffer (2ch acq)
+/*  Striping Pattern:
+ *   (example 4x4 array)
+ *  X across, Y down
+ *    0   1   2   3
+ *  0 A0  A2  A4  A6
+ *  1 B0  B2  B4  B6
+ *  2 A1  A3  A5  A7
+ *  3 B1  B3  B5  B7
+ */
+void dualWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int samplenumber,float chAval, float chBval)
+{
+  //samplenumber being the sample number. A# B# being ideally simult. measurements and # being the sample number
+  xidx = floor((2*samplenumber) / (bufferv_ydim)); //Gives x coord of storage buffer
+  yidxA = ((2*samplenumber) % bufferv_ydim); //Gives y coord of storage buffer for A
+  yidxB = yidxA + 1; //Gives y coord of storage buffer for B
+
+  arr[xidx][yidxA] = chAval;
+  arr[xidx][yidxB] = chBval;
+}
+
+//writes 4 values to buffer. (4ch acq)
 void quadWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int buffpos,float ch0val, float ch1val, float ch2val, float ch3val)
 {
   arr[0][buffpos] = ch0val;
@@ -75,6 +97,31 @@ void linearReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
   }
   //Serial.println(' ');
 }
+
+//Reads buffer out in 2 columns (ch: A  B)
+void dualReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int numbersamples)
+{
+  int xextent = floor(2*numbersamples / bufferv_ydim)
+  
+  for (int xpos = 0; xpos < numbersamples; xpos++)
+  {
+    for(int xpos = 0;xpos<xextent;xpos++)
+    {
+      Serial.print(arr[xpos][ypos],8);
+      Serial.flush();
+      if (xpos != bufferv_xdim - 1)
+      {
+        Serial.print(',');
+      }
+      else
+      {
+        Serial.print("\n");
+      }
+    }
+    //Serial.println(' ');
+  }
+}
+
 
 //Reads buffer out in 4 columns (ch: 0  1  2  3):
 void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
@@ -797,6 +844,30 @@ void ACQ(std::vector<String> DB,int nCh)
       while (micros() <= timer + sampleStep);
     }
   }
+  else if (nCh == 2)
+  {
+    //Syntax: ACQ1,ADC_A#,ADC_B#,nSamples,sampleStep
+    //Converting serial string into variables:
+    int adcChannelA = fixMapADC(DB[1].toInt());
+    int adcChannelB = fixMapADC(DB[2].toInt());
+    int nSamples = DB[3].toInt(); // Input seconds but internally microsec
+    float sampleStep = DB[4].toFloat()*1000000.0; //Time between each sample (1/f) (input: seconds)
+
+    //Since 1 channel, can have bufferv_xdim*bufferv_ydim samples! Check.
+    if (nSamples>(bufferv_xdim*bufferv_ydim))
+    {
+      nSamples = bufferv_xdim*bufferv_ydim;
+    }
+    nSamplesToRead = nSamples;
+    
+    //Ramp through values and save into buffer
+    for (int j = 0; j < nSamples; j++)
+    {
+      int timer = micros();
+      linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel));
+      while (micros() <= timer + sampleStep);
+    }
+  }
   
   else
   {
@@ -898,7 +969,7 @@ void sinw4(std::vector<String> DB)
   {
     digitalWrite(data, HIGH);
     writeDAC(0, vdc0 + v00 * sin(w0 * ((micros()-timer0)/ 1000000.0) + phi0));
-    writeDAC(1, vdc1 + v01 * sin(w1 * ((micros()-timer0-120)/ 1000000.0) + phi1)); //-120us attempt to fix phase offset.
+    writeDAC(1, vdc1 + v01 * sin(w1 * ((micros()-timer0-120)/ 1000000.0) + phi1)); //-120us attempt to fix phase offset. Unsuccessful. Left as note
     writeDAC(2, vdc2 + v02 * sin(w2 * ((micros()-timer0-240)/ 1000000.0) + phi2));
     writeDAC(3, vdc3 + v03 * sin(w2 * ((micros()-timer0-360)/ 1000000.0) + phi3));
     digitalWrite(data, LOW);

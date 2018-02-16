@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic
 from opendacwrapper import ODAC
 from time import sleep
+from math import pi
 
 class openDAC_UI(QMainWindow):
     def __init__(self,myODAC):
@@ -43,16 +44,13 @@ class openDAC_UI(QMainWindow):
         self.ui.buttset_ch3.clicked.connect(self.DCSetCH3)
         self.ui.buttset_all.clicked.connect(self.DCSetAll)
         self.ui.buttset_0v.clicked.connect(self.DCReset0V)
+        self.ui.leset_ch0.setText("0.0")
+        self.ui.leset_ch1.setText("0.0")
+        self.ui.leset_ch2.setText("0.0")
+        self.ui.leset_ch3.setText("0.0")
         #SineOut Related Widgets
         self.ui.buttsin_start.clicked.connect(self.SineOut)
-        #Ramp1 Out Related Widgets
-        self.ui.buttr1_start.clicked.connect(self.Ramp1Start)
-        #Ramp4 Out Related Widgets
-        self.ui.buttr4_start.clicked.connect(self.Ramp4Start)
         #DataOut Related Widgets
-        self.ui.butts_csv.clicked.connect(self.DataOut_CSV)
-        self.ui.butts_plot.clicked.connect(self.DataOut_PLT)
-        self.ui.butts_pds.clicked.connect(self.DataOut_PDS)
         self.ui.leout_fname.setText("data")
 
     #def BUTTONCLICKEDFUNC(self):
@@ -135,20 +133,125 @@ class openDAC_UI(QMainWindow):
         print("Ramp and Read 4 Started")
     #DCOut Event Handlers
     def DCSetCH0(self):
-        print("Set CH0")
+        if self.DAC.ready == True:
+            try:
+                voltage = float(self.ui.leset_ch0.text())
+                self.DAC.setDAC(0,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH0 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting")
+        else:
+            print("Error: Check Serial Connection")
     def DCSetCH1(self):
-        print("Set CH1")
+        if self.DAC.ready == True:
+            try:
+                voltage = float(self.ui.leset_ch1.text())
+                self.DAC.setDAC(1,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH1 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting")
+        else:
+            print("Error: Check Serial Connection")
     def DCSetCH2(self):
-        print("Set CH2")
+        if self.DAC.ready == True:
+            try:
+                voltage = float(self.ui.leset_ch2.text())
+                self.DAC.setDAC(2,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH2 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting")
+        else:
+            print("Error: Check Serial Connection")
     def DCSetCH3(self):
-        print("Set CH3")
+        if self.DAC.ready == True:
+            try:
+                voltage = float(self.ui.leset_ch3.text())
+                self.DAC.setDAC(3,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH3 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting")
+        else:
+            print("Error: Check Serial Connection")
     def DCSetAll(self):
-        print("Set CH0 - CH3")
+        if self.DAC.ready == True:
+            #Ch0
+            try:
+                voltage = float(self.ui.leset_ch0.text())
+                self.DAC.setDAC(0,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH0 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting, CH0")
+            #Ch1
+            try:
+                voltage = float(self.ui.leset_ch1.text())
+                self.DAC.setDAC(1,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH1 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting, CH1")
+            #Ch2
+            try:
+                voltage = float(self.ui.leset_ch2.text())
+                self.DAC.setDAC(2,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH2 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting, CH2")
+            #Ch3
+            try:
+                voltage = float(self.ui.leset_ch3.text())
+                self.DAC.setDAC(3,voltage)
+                if voltage >= -10.0 and voltage <= 10.0:
+                    print("Set output CH3 to " + str(voltage) + " Volts")
+            except ValueError:
+                print("User Error: Invalid DC Voltage Setting, CH3")
+        else:
+            print("Error: Check Serial Connection")
     def DCReset0V(self):
-        print("Reset CH0 - CH3 to 0.0V")
+        if self.DAC.ready == True:
+            #Ch0
+                self.DAC.setDAC(0,0)
+                print("Reset output CH0 to " + str(0.0) + " Volts")
+                self.DAC.setDAC(1,0)
+                print("Reset output CH1 to " + str(0.0) + " Volts")
+                self.DAC.setDAC(2,0)
+                print("Reset output CH2 to " + str(0.0) + " Volts")
+                self.DAC.setDAC(3,0)
+                print("Reset output CH3 to " + str(0.0) + " Volts")
+        else:
+            print("Error: Check Serial Connection")
     #SineOut Event Handlers
     def SineOut(self):
-        print("Sine Output Started")
+        if self.DAC.ready == True:
+            try:
+                v00 = float(self.ui.lesin_amp_ch0.text())
+                v01 = float(self.ui.lesin_amp_ch1.text())
+                v02 = float(self.ui.lesin_amp_ch2.text())
+                v03 = float(self.ui.lesin_amp_ch3.text())
+                angfreq0 = 2.0*pi*float(self.ui.lesin_freq_ch0.text())
+                angfreq1 = 2.0*pi*float(self.ui.lesin_freq_ch1.text())
+                angfreq2 = 2.0*pi*float(self.ui.lesin_freq_ch2.text())
+                angfreq3 = 2.0*pi*float(self.ui.lesin_freq_ch3.text())
+                phase0 = float(self.ui.lesin_phi_ch0.text()) * (2 * pi / 360.0)
+                phase1 = float(self.ui.lesin_phi_ch1.text())  * (2 * pi / 360.0)
+                phase2 = float(self.ui.lesin_phi_ch2.text())  * (2 * pi / 360.0)
+                phase3 = float(self.ui.lesin_phi_ch3.text())  * (2 * pi / 360.0)
+                offset0 = float(self.ui.lesin_off_ch0.text())
+                offset1 = float(self.ui.lesin_off_ch1.text())
+                offset2 = float(self.ui.lesin_off_ch2.text())
+                offset3 = float(self.ui.lesin_off_ch3.text())
+                interval = float(self.ui.lesin_duration.text())
+                self.DAC.sine4(v00,v01,v02,v03,angfreq0,angfreq1,angfreq2,angfreq3,phase0,phase1,phase2,phase3,offset0,offset1,offset2,offset3,interval)
+                print("Sine Wave output for " + str(interval) + " sec")
+            except ValueError:
+                print("User Error: Invalid Settings for Sine4 output")
+        else:
+            print("Error: Check Serial Connection")
     #Ramp1 Event Handlers
     def Ramp1Start(self):
         print("Ramp 1 Started")
@@ -160,13 +263,6 @@ class openDAC_UI(QMainWindow):
         filename = self.ui.leout_fname.text() + "_tt.csv"
         self.DAC.saveToFile(filename)
         print("CSV file saved: " + filename)
-    def DataOut_PLT(self):
-        filename = self.ui.leout_fname.text() + "_tt.png"
-        print("Plot Plotted")
-    def DataOut_PDS(self):
-        filename = self.ui.leout_fname.text() + "_pds.png"
-        print("Plot Plotted")
-
 
 
 

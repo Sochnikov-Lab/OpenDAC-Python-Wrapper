@@ -10,8 +10,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1051</width>
-    <height>360</height>
+    <width>859</width>
+    <height>359</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,7 +21,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>OpenDAC Control Interface</string>
+   <string>OpenDAC Control and Acquisition Interface</string>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -48,9 +48,12 @@
      </font>
     </property>
     <property name="title">
-     <string>Acquisition / ADC</string>
+     <string>Acquisition</string>
     </property>
     <widget class="QTabWidget" name="tabWidget_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -65,8 +68,17 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
      <property name="currentIndex">
       <number>0</number>
+     </property>
+     <property name="tabsClosable">
+      <bool>false</bool>
      </property>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
@@ -78,7 +90,7 @@
          <x>10</x>
          <y>144</y>
          <width>361</width>
-         <height>61</height>
+         <height>62</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -96,10 +108,18 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="lea1_samples"/>
+         <widget class="QLineEdit" name="lea1_samples">
+          <property name="toolTip">
+           <string>Hardware limit: 20000</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="lea1_srate"/>
+         <widget class="QLineEdit" name="lea1_srate">
+          <property name="toolTip">
+           <string>Hardware &quot;limit&quot;: 2kHz</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_2">
@@ -121,74 +141,23 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>261</width>
-         <height>51</height>
+         <width>371</width>
+         <height>41</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start acquiring voltage data on a single channel.&lt;br/&gt;&lt;/p&gt;&lt;p&gt;HARDWARE BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>START</string>
        </property>
       </widget>
-      <widget class="QWidget" name="verticalLayoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>10</y>
-         <width>91</width>
-         <height>83</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QLabel" name="label_29">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Precision</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_10">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float32</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_9">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float16</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="horizontalLayoutWidget_7">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>70</y>
-         <width>261</width>
+         <y>100</y>
+         <width>371</width>
          <height>31</height>
         </rect>
        </property>
@@ -250,7 +219,7 @@
          <x>10</x>
          <y>144</y>
          <width>361</width>
-         <height>61</height>
+         <height>62</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_5">
@@ -268,10 +237,18 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="lea2_samples"/>
+         <widget class="QLineEdit" name="lea2_samples">
+          <property name="toolTip">
+           <string>Hardware limit: 10000</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="lea2_srate"/>
+         <widget class="QLineEdit" name="lea2_srate">
+          <property name="toolTip">
+           <string>Hardware &quot;limit&quot;: 2kHz</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_44">
@@ -293,7 +270,7 @@
         <rect>
          <x>10</x>
          <y>70</y>
-         <width>261</width>
+         <width>371</width>
          <height>31</height>
         </rect>
        </property>
@@ -349,9 +326,12 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>261</width>
-         <height>51</height>
+         <width>371</width>
+         <height>41</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start acquiring voltage data on two channels.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;HARDWARE BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>START</string>
@@ -362,7 +342,7 @@
         <rect>
          <x>10</x>
          <y>100</y>
-         <width>261</width>
+         <width>371</width>
          <height>31</height>
         </rect>
        </property>
@@ -418,68 +398,17 @@
       <attribute name="title">
        <string>A4</string>
       </attribute>
-      <widget class="QWidget" name="verticalLayoutWidget_4">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>10</y>
-         <width>91</width>
-         <height>83</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QLabel" name="label_39">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Precision</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_15">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float32</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_16">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float16</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QPushButton" name="butta4_start">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>261</width>
-         <height>81</height>
+         <width>371</width>
+         <height>41</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start acquiring voltage data on four channels.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;HARDWARE BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>START</string>
@@ -491,7 +420,7 @@
          <x>10</x>
          <y>144</y>
          <width>361</width>
-         <height>61</height>
+         <height>62</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
@@ -509,10 +438,18 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="lea4_samples"/>
+         <widget class="QLineEdit" name="lea4_samples">
+          <property name="toolTip">
+           <string>Hardware limit: 5000</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="lea4_srate"/>
+         <widget class="QLineEdit" name="lea4_srate">
+          <property name="toolTip">
+           <string>Hardware &quot;limit&quot;: 2kHz</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_40">
@@ -534,33 +471,17 @@
       <attribute name="title">
        <string>RR1</string>
       </attribute>
-      <widget class="QLabel" name="label_33">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>150</y>
-         <width>361</width>
-         <height>51</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>This copies the settings in the &quot;Ramp1&quot; tab to the right.</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QPushButton" name="buttrr1_start">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>261</width>
-         <height>81</height>
+         <width>371</width>
+         <height>41</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start a linear voltage ramp on an output while reading voltages on an input.&lt;br/&gt;Note: For any ramp that you don't need data, you can simply ignore saving it.&lt;br/&gt;&lt;br/&gt;NON BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>START</string>
@@ -570,8 +491,8 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>100</y>
-         <width>361</width>
+         <y>60</y>
+         <width>371</width>
          <height>31</height>
         </rect>
        </property>
@@ -622,611 +543,12 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="verticalLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>10</y>
-         <width>91</width>
-         <height>83</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QLabel" name="label_30">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Precision</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_11">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float32</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_12">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float16</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_5">
-      <attribute name="title">
-       <string>RR4</string>
-      </attribute>
-      <widget class="QPushButton" name="buttrr4_start">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>261</width>
-         <height>81</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>START</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_14">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>150</y>
-         <width>361</width>
-         <height>51</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>This copies the settings in the &quot;Ramp4&quot; tab to the right.</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QWidget" name="verticalLayoutWidget_3">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>10</y>
-         <width>91</width>
-         <height>83</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QLabel" name="label_37">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Precision</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_13">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float32</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_14">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Float16</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_6">
-      <attribute name="title">
-       <string>Data Out</string>
-      </attribute>
-      <widget class="QPushButton" name="butts_csv">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>171</width>
-         <height>81</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Save CSV</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="butts_plot">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>190</x>
-         <y>10</y>
-         <width>181</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Time Trace</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="butts_pds">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>190</x>
-         <y>50</y>
-         <width>181</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>PDS Plot</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leout_fname">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>180</y>
-         <width>251</width>
-         <height>23</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_4">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>160</y>
-         <width>201</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>File Description:</string>
-       </property>
-      </widget>
-     </widget>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>0</y>
-      <width>611</width>
-      <height>281</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="title">
-     <string>Signal Output / DAC</string>
-    </property>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>591</width>
-       <height>241</height>
-      </rect>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>DC</string>
-      </attribute>
-      <widget class="QWidget" name="gridLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>561</width>
-         <height>128</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="leset_ch0"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="buttset_ch1">
-          <property name="text">
-           <string>Set CH1</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QPushButton" name="buttset_ch0">
-          <property name="text">
-           <string>Set CH0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="leset_ch2"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="leset_ch1"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="buttset_ch2">
-          <property name="text">
-           <string>Set CH2</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="buttset_ch3">
-          <property name="text">
-           <string>Set CH3</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="leset_ch3"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="horizontalLayoutWidget_5">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>150</y>
-         <width>561</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
-        <item>
-         <widget class="QPushButton" name="buttset_all">
-          <property name="text">
-           <string>Set ALL</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="buttset_0v">
-          <property name="text">
-           <string>Reset all to 0V</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Sine</string>
-      </attribute>
-      <widget class="QWidget" name="gridLayoutWidget_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>577</width>
-         <height>153</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Ch</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_6">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Amplitude (V)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="label_7">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Frequency (Hz)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="label_8">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Phase S. (Deg)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch2"/>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch1"/>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch0"/>
-        </item>
-        <item row="4" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch3"/>
-        </item>
-        <item row="2" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch1"/>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch0"/>
-        </item>
-        <item row="4" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch3"/>
-        </item>
-        <item row="3" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch2"/>
-        </item>
-        <item row="1" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch0"/>
-        </item>
-        <item row="3" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch2"/>
-        </item>
-        <item row="4" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch3"/>
-        </item>
-        <item row="2" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch1"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_9">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>DC Offset (V)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch0"/>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch1"/>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch2"/>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch3"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_24">
-          <property name="text">
-           <string>CH0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_25">
-          <property name="text">
-           <string>CH1</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_26">
-          <property name="text">
-           <string>CH2</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_27">
-          <property name="text">
-           <string>CH3</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="horizontalLayoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>160</y>
-         <width>561</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Output Duration (sec):</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lesin_duration"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="buttsin_start">
-          <property name="text">
-           <string>START</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_7">
-      <attribute name="title">
-       <string>Ramp1</string>
-      </attribute>
-      <widget class="QPushButton" name="buttr1_start">
-       <property name="geometry">
-        <rect>
-         <x>350</x>
-         <y>80</y>
-         <width>221</width>
-         <height>81</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>START</string>
-       </property>
-      </widget>
-      <widget class="QWidget" name="gridLayoutWidget_8">
-       <property name="geometry">
-        <rect>
-         <x>350</x>
-         <y>10</y>
-         <width>221</width>
-         <height>62</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_8">
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_31">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Interval (us )</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_32">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Steps</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="ler1_steps"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="ler1_intrv"/>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="horizontalLayoutWidget_6">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>10</y>
-         <width>335</width>
+         <y>90</y>
+         <width>371</width>
          <height>31</height>
         </rect>
        </property>
@@ -1277,25 +599,12 @@
         </item>
        </layout>
       </widget>
-      <widget class="Line" name="line_2">
-       <property name="geometry">
-        <rect>
-         <x>330</x>
-         <y>10</y>
-         <width>20</width>
-         <height>151</height>
-        </rect>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
       <widget class="QWidget" name="gridLayoutWidget_9">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>90</y>
-         <width>321</width>
+         <y>120</y>
+         <width>141</width>
          <height>61</height>
         </rect>
        </property>
@@ -1319,10 +628,18 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLineEdit" name="ler1vi"/>
+         <widget class="QLineEdit" name="ler1vi">
+          <property name="toolTip">
+           <string>Initial DAC voltage</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="ler1vf"/>
+         <widget class="QLineEdit" name="ler1vf">
+          <property name="toolTip">
+           <string>Final DAC voltage</string>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_38">
@@ -1344,41 +661,137 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="gridLayoutWidget_8">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>120</y>
+         <width>221</width>
+         <height>62</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_8">
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_31">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Interval (us)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_32">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Steps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="ler1_steps">
+          <property name="toolTip">
+           <string>Number of steps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="ler1_intrv">
+          <property name="toolTip">
+           <string>Time between steps</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
-     <widget class="QWidget" name="tab_4">
+     <widget class="QWidget" name="tab_5">
       <attribute name="title">
-       <string>Ramp4</string>
+       <string>RR4</string>
       </attribute>
-      <widget class="QWidget" name="gridLayoutWidget_6">
+      <widget class="QPushButton" name="buttrr4_start">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>311</width>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start linear voltage ramps on all outputs while reading voltages on all inputs.&lt;br/&gt;Note: For any ramp that you don't need data, you can simply ignore saving it.&lt;br/&gt;&lt;br/&gt;NON BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>START</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="gridLayoutWidget_6">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>10</y>
+         <width>181</width>
          <height>153</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_6">
         <item row="4" column="1">
-         <widget class="QLineEdit" name="ler4vi_ch3"/>
+         <widget class="QLineEdit" name="ler4vi_ch3">
+          <property name="toolTip">
+           <string>Initial Voltage Ch3</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLineEdit" name="ler4vi_ch1"/>
+         <widget class="QLineEdit" name="ler4vi_ch1">
+          <property name="toolTip">
+           <string>Initial Voltage Ch1</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLineEdit" name="ler4vi_ch2"/>
+         <widget class="QLineEdit" name="ler4vi_ch2">
+          <property name="toolTip">
+           <string>Initial Voltage Ch2</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="2">
-         <widget class="QLineEdit" name="ler4vf_ch1"/>
+         <widget class="QLineEdit" name="ler4vf_ch1">
+          <property name="toolTip">
+           <string>Final Voltage Ch1</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="2">
-         <widget class="QLineEdit" name="ler4vf_ch2"/>
+         <widget class="QLineEdit" name="ler4vf_ch2">
+          <property name="toolTip">
+           <string>Final Voltage Ch2</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QLineEdit" name="ler4vf_ch0"/>
+         <widget class="QLineEdit" name="ler4vf_ch0">
+          <property name="toolTip">
+           <string>Final Voltage Ch0</string>
+          </property>
+         </widget>
         </item>
         <item row="4" column="2">
-         <widget class="QLineEdit" name="ler4vf_ch3"/>
+         <widget class="QLineEdit" name="ler4vf_ch3">
+          <property name="toolTip">
+           <string>Final Voltage Ch3</string>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_21">
@@ -1399,7 +812,11 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="ler4vi_ch0"/>
+         <widget class="QLineEdit" name="ler4vi_ch0">
+          <property name="toolTip">
+           <string>Initial Voltage Ch0</string>
+          </property>
+         </widget>
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_12">
@@ -1468,9 +885,9 @@
       <widget class="QWidget" name="gridLayoutWidget_7">
        <property name="geometry">
         <rect>
-         <x>350</x>
-         <y>10</y>
-         <width>221</width>
+         <x>10</x>
+         <y>100</y>
+         <width>181</width>
          <height>62</height>
         </rect>
        </property>
@@ -1479,12 +896,13 @@
          <widget class="QLabel" name="label_20">
           <property name="font">
            <font>
-            <weight>75</weight>
-            <bold>true</bold>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
-           <string>Interval (us )</string>
+           <string>Interval (us)</string>
           </property>
          </widget>
         </item>
@@ -1492,8 +910,9 @@
          <widget class="QLabel" name="label_19">
           <property name="font">
            <font>
-            <weight>75</weight>
-            <bold>true</bold>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
@@ -1502,54 +921,417 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="ler4_steps"/>
+         <widget class="QLineEdit" name="ler4_steps">
+          <property name="toolTip">
+           <string>Number of steps</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="ler4_intrv"/>
+         <widget class="QLineEdit" name="ler4_intrv">
+          <property name="toolTip">
+           <string>Time between steps</string>
+          </property>
+         </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="Line" name="line">
-       <property name="geometry">
-        <rect>
-         <x>330</x>
-         <y>10</y>
-         <width>20</width>
-         <height>151</height>
-        </rect>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="buttr4_start">
-       <property name="geometry">
-        <rect>
-         <x>350</x>
-         <y>80</y>
-         <width>221</width>
-         <height>81</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>START</string>
-       </property>
       </widget>
       <widget class="QLabel" name="label_28">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>180</y>
-         <width>571</width>
+         <width>371</width>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set Vi=Vf for constant values. All ch. are set by this function.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set Vi=Vf for DC values. All ch. are set by this function.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>Data Out</string>
+      </attribute>
+      <widget class="QPushButton" name="butts_csv">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>371</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Saves the current data as a CSV file with filename [userdescription]_tt.csv&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Save CSV</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="leout_fname">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>120</y>
+         <width>371</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>201</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>File Description:</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>0</y>
+      <width>421</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Signal Output</string>
+    </property>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>401</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="tabsClosable">
+      <bool>false</bool>
+     </property>
+     <property name="movable">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>DC</string>
+      </attribute>
+      <widget class="QWidget" name="gridLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>375</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="leset_ch3"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="leset_ch0"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="buttset_ch1">
+          <property name="text">
+           <string>Set CH1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="buttset_ch0">
+          <property name="text">
+           <string>Set CH0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="leset_ch1"/>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="buttset_ch3">
+          <property name="text">
+           <string>Set CH3</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLineEdit" name="leset_ch2"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="buttset_ch2">
+          <property name="text">
+           <string>Set CH2</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>160</y>
+         <width>371</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QPushButton" name="buttset_all">
+          <property name="text">
+           <string>Set ALL</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttset_0v">
+          <property name="text">
+           <string>Reset all to 0V</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>281</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Range:&lt;/span&gt; -10V to +10V&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Sine</string>
+      </attribute>
+      <widget class="QWidget" name="gridLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>371</width>
+         <height>153</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_6">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>V_0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_7">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Freq (Hz)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_8">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Phase (deg)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLineEdit" name="lesin_amp_ch2"/>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLineEdit" name="lesin_amp_ch1"/>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="lesin_amp_ch0"/>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLineEdit" name="lesin_amp_ch3"/>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLineEdit" name="lesin_freq_ch1"/>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="lesin_freq_ch0"/>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLineEdit" name="lesin_freq_ch3"/>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLineEdit" name="lesin_freq_ch2"/>
+        </item>
+        <item row="1" column="4">
+         <widget class="QLineEdit" name="lesin_phi_ch0"/>
+        </item>
+        <item row="3" column="4">
+         <widget class="QLineEdit" name="lesin_phi_ch2"/>
+        </item>
+        <item row="4" column="4">
+         <widget class="QLineEdit" name="lesin_phi_ch3"/>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLineEdit" name="lesin_phi_ch1"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_9">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>V_dc</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lesin_off_ch0"/>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lesin_off_ch1"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="lesin_off_ch2"/>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="lesin_off_ch3"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_24">
+          <property name="text">
+           <string>CH0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_25">
+          <property name="text">
+           <string>CH1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_26">
+          <property name="text">
+           <string>CH2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_27">
+          <property name="text">
+           <string>CH3</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>170</y>
+         <width>371</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Output Duration (sec):</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lesin_duration"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttsin_start">
+          <property name="text">
+           <string>START</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </widget>
@@ -1559,7 +1341,7 @@
      <rect>
       <x>10</x>
       <y>280</y>
-      <width>1031</width>
+      <width>841</width>
       <height>71</height>
      </rect>
     </property>
@@ -1569,7 +1351,7 @@
      </font>
     </property>
     <property name="title">
-     <string>Status</string>
+     <string>OpenDAC Connection</string>
     </property>
     <widget class="QWidget" name="horizontalLayoutWidget_3">
      <property name="geometry">
@@ -1590,6 +1372,9 @@
       </item>
       <item>
        <widget class="QComboBox" name="coboxsp_prt">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Port that the device is enumerated on.&lt;br/&gt;(Windows: Check device manager!)&lt;br/&gt;(Linux Default: /dev/ttyACM0, but check dmesg)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="editable">
          <bool>false</bool>
         </property>
@@ -1607,6 +1392,9 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lesp_baud">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Data rate in bps.&lt;br/&gt;(Default 115200 unless F/W change)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="inputMask">
          <string/>
         </property>
@@ -1623,6 +1411,9 @@
         <property name="enabled">
          <bool>true</bool>
         </property>
+        <property name="toolTip">
+         <string>Connect to the OpenDAC</string>
+        </property>
         <property name="text">
          <string>Connect</string>
         </property>
@@ -1633,23 +1424,15 @@
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="toolTip">
+         <string>Disconnect from the OpenDAC</string>
+        </property>
         <property name="text">
          <string>Disconnect</string>
         </property>
        </widget>
       </item>
      </layout>
-    </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>610</x>
-       <y>30</y>
-       <width>391</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2"/>
     </widget>
    </widget>
   </widget>
