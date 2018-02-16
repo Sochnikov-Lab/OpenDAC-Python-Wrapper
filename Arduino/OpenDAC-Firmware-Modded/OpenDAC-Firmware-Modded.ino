@@ -1,7 +1,7 @@
 //Ardunio *DUE*code for controlling EVAL-AD7734 ADC and EVAL-AD5764 DAC
 //Created by Andrea Young
 //Modified by Carlos Kometter 7/7/2015
-//Modified by Joe Sheldon 11/03/2017
+//Modified by Joe Sheldon 11/03/2017 - 02/16/2018
 
 #include "SPI.h" // necessary library for SPI communication
 #include <vector>
@@ -68,9 +68,9 @@ void linearWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int linpos,float 
 void dualWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int samplenumber,float chAval, float chBval)
 {
   //samplenumber being the sample number. A# B# being ideally simult. measurements and # being the sample number
-  xidx = floor((2*samplenumber) / (bufferv_ydim)); //Gives x coord of storage buffer
-  yidxA = ((2*samplenumber) % bufferv_ydim); //Gives y coord of storage buffer for A
-  yidxB = yidxA + 1; //Gives y coord of storage buffer for B
+  int xidx = floor((2*samplenumber) / (bufferv_ydim)); //Gives x coord of storage buffer
+  int yidxA = ((2*samplenumber) % bufferv_ydim); //Gives y coord of storage buffer for A
+  int yidxB = yidxA + 1; //Gives y coord of storage buffer for B
 
   arr[xidx][yidxA] = chAval;
   arr[xidx][yidxB] = chBval;
@@ -121,25 +121,8 @@ void linearReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
 //Reads buffer out in 2 columns (ch: A  B)
 void dualReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int numbersamples)
 {
-  int xextent = floor(2*numbersamples / bufferv_ydim)
-  
-  for (int xpos = 0; xpos < numbersamples; xpos++)
-  {
-    for(int xpos = 0;xpos<xextent;xpos++)
-    {
-      Serial.print(arr[xpos][ypos],8);
-      Serial.flush();
-      if (xpos != bufferv_xdim - 1)
-      {
-        Serial.print(',');
-      }
-      else
-      {
-        Serial.print("\n");
-      }
-    }
-    //Serial.println(' ');
-  }
+  int xextent = floor(2*numbersamples / bufferv_ydim);
+    
 }
 
 
@@ -873,23 +856,9 @@ void ACQ(std::vector<String> DB,int nCh)
     int nSamples = DB[3].toInt(); // Input seconds but internally microsec
     float sampleStep = DB[4].toFloat()*1000000.0; //Time between each sample (1/f) (input: seconds)
 
-    //Since 1 channel, can have bufferv_xdim*bufferv_ydim samples! Check.
-    if (nSamples>(bufferv_xdim*bufferv_ydim))
-    {
-      nSamples = bufferv_xdim*bufferv_ydim;
-    }
-    nSamplesToRead = nSamples;
-    
-    //Ramp through values and save into buffer
-    for (int j = 0; j < nSamples; j++)
-    {
-      int timer = micros();
-      linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel));
-      while (micros() <= timer + sampleStep);
-    }
   }
-  
-  else
+  //no 3ch Acquisition!
+  else if (nCh == 4)
   {
     //Syntax: ACQ4,nSamples,sampleStep
     //Converting serial string into variables:
