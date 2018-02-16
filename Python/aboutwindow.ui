@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>398</width>
-    <height>199</height>
+    <height>227</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>140</y>
+     <y>170</y>
      <width>81</width>
      <height>51</height>
     </rect>
@@ -48,11 +48,11 @@
      <x>10</x>
      <y>60</y>
      <width>381</width>
-     <height>81</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Credit:&lt;/span&gt;&lt;br/&gt;--&amp;gt; Hardware instructions and original firmware &lt;br/&gt;at the &lt;a href=&quot;http://opendacs.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenDACs project website.&lt;br/&gt;&lt;/span&gt;&lt;/a&gt;--&amp;gt; Modified firmware on GitHub, provided by &lt;br/&gt;Sochnikov Lab: &lt;a href=&quot;https://github.com/Sochnikov-Lab/OpenDAC-Python-Wrapper&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenDAC-Python-Wrapper&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Credit:&lt;/span&gt;&lt;br/&gt;--&amp;gt; Hardware instructions and original firmware &lt;br/&gt;at the &lt;a href=&quot;http://opendacs.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenDACs project website.&lt;br/&gt;&lt;/span&gt;&lt;/a&gt;--&amp;gt; Modified firmware and Python Wrapper on &lt;br/&gt;GitHub, provided by Sochnikov Lab: &lt;br/&gt;&lt;a href=&quot;https://github.com/Sochnikov-Lab/OpenDAC-Python-Wrapper&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenDAC-Python-Wrapper&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
@@ -62,7 +62,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>170</y>
+     <y>200</y>
      <width>291</width>
      <height>20</height>
     </rect>
@@ -75,7 +75,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>110</y>
+     <y>140</y>
      <width>71</width>
      <height>21</height>
     </rect>
