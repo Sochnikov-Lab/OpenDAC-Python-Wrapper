@@ -36,7 +36,17 @@ void clearbuffer(float arr[bufferv_xdim][bufferv_ydim])
   }
 }
 
+
 //linearly writes to buffer. (1ch acq)
+/*  Striping Pattern:
+ *   (example 4x4 array)
+ *  X across, Y down
+ *     0   1   2   3
+ *  0 A00 A04 A08 A12
+ *  1 A01 A05 A09 A13
+ *  2 A02 A06 A10 A14
+ *  3 A03 A07 A11 A15
+ */
 void linearWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int linpos,float valToWrite)
 {
   int xidx = floor( linpos / bufferv_ydim);
@@ -67,6 +77,16 @@ void dualWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int samplenumber,fl
 }
 
 //writes 4 values to buffer. (4ch acq)
+/*
+ /*  Striping Pattern:
+ *   (example 4x4 array)
+ *  X across, Y down
+ *    0   1   2   3
+ *  0 A0  B0  C0  D0
+ *  1 A1  B1  C1  D1
+ *  2 A2  B2  C2  D2
+ *  3 A3  B3  C3  D3
+ */
 void quadWriteToBuffer(float arr[bufferv_xdim][bufferv_ydim],int buffpos,float ch0val, float ch1val, float ch2val, float ch3val)
 {
   arr[0][buffpos] = ch0val;
