@@ -120,19 +120,19 @@ class openDAC_UI(QMainWindow):
             print("Error: Incorrect Channel Selection.")
     #ACQ4 Event Handlers
     def ACQ4Start(self):
-        try:
-            samples = int(self.ui.lea4_samples.text())
-            stepsize = 1.0/float(self.ui.lea4_srate.text())
-            if samples <= 5000 and stepsize >= 1.0/2000.0:
-                if self.DAC.ready == True:
-                    print("CH0,CH1,CH2,CH3 Selected.")
+        if self.DAC.ready == True:
+            print("CH0,CH1,CH2,CH3 Selected.")
+            try:
+                samples = int(self.ui.lea4_samples.text())
+                stepsize = 1.0/float(self.ui.lea4_srate.text())
+                if samples <= 5000 and stepsize >= 1.0/2000.0:    #Ramp1 Event Handlers
                     self.DAC.acquireAll(samples,stepsize)
                 else:
-                    print("Error: Check Serial Connection")
-            else:
-                print("Acquire Halted: too many samples (max 5000) or sample rate too fast (max 2kHz)")
-        except ValueError:
-            print("Error: Issue with values given.")
+                    print("Acquire Halted: too many samples (max 5000) or sample rate too fast (max 2kHz)")
+            except ValueError:
+                print("Error: Issue with values given.")
+        else:
+            print("Error: Check Serial Connection")
     #RAR1 Event Handlers
     def RAR1Start(self):
         print("Error: Ramp and Read 1 Not Implemented Yet")
@@ -172,7 +172,7 @@ class openDAC_UI(QMainWindow):
             except ValueError:
                 print("User Error: Invalid DC Voltage Setting")
         else:
-            print("Error: Check Serial Connection")
+            print("Error    #Ramp1 Event Handlers
     def DCSetCH3(self):
         if self.DAC.ready == True:
             try:
@@ -260,12 +260,7 @@ class openDAC_UI(QMainWindow):
                 print("User Error: Invalid Settings for Sine4 output")
         else:
             print("Error: Check Serial Connection")
-    #Ramp1 Event Handlers
-    def Ramp1Start(self):
-        print("Ramp 1 Started")
-    #Ramp4 Event Handlers
-    def Ramp4Start(self):
-        print("Ramp 4 Started")
+
     #DataOut Event Handlers
     def DataOut_CSV(self):
         filename = self.ui.leout_fname.text() + "_tt.csv"
