@@ -856,6 +856,20 @@ void ACQ(std::vector<String> DB,int nCh)
     int nSamples = DB[3].toInt(); // Input seconds but internally microsec
     float sampleStep = DB[4].toFloat()*1000000.0; //Time between each sample (1/f) (input: seconds)
 
+    //Since 2 channel, can have bufferv_xdim*bufferv_ydim / 2 samples! Check.
+    if (nSamples>(bufferv_xdim*bufferv_ydim / 2))
+    {
+      nSamples = bufferv_xdim*bufferv_ydim / 2;
+    }
+    nSamplesToRead = nSamples;
+    
+    //Ramp through values and save into buffer
+    for (int j = 0; j < nSamples; j++)
+    {
+      int timer = micros();
+      dualWriteToBuffer(bufferv,j,getSingleReading(adcChannelA),getSingleReading(adcChannelB));
+      while (micros() <= timer + sampleStep);
+    }
   }
   //no 3ch Acquisition!
   else if (nCh == 4)
