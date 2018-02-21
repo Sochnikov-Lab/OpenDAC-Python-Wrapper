@@ -41,8 +41,23 @@ class openDAC_UI(QMainWindow):
         self.ui.lea4_srate.setText("2000")
         #RAR1 Related Widgets
         self.ui.buttrr1_start.clicked.connect(self.RAR1Start)
+        self.ui.ler1_steps.setText("20000")
+        self.ui.ler1_intrv.setText("0.0005")
+        self.ui.ler1vi.setText("0.0")
+        self.ui.ler1vi.setText("0.0")
+        self.ui.ler1vf.setText("0.0")
         #RAR4 Related Widgets
         self.ui.buttrr4_start.clicked.connect(self.RAR4Start)
+        self.ui.ler4_steps.setText("5000")
+        self.ui.ler4_intrv.setText("0.0005")
+        self.ui.ler4vi_ch0.setText("0.0")
+        self.ui.ler4vf_ch0.setText("0.0")
+        self.ui.ler4vi_ch1.setText("0.0")
+        self.ui.ler4vf_ch1.setText("0.0")
+        self.ui.ler4vi_ch2.setText("0.0")
+        self.ui.ler4vf_ch2.setText("0.0")
+        self.ui.ler4vi_ch3.setText("0.0")
+        self.ui.ler4vf_ch3.setText("0.0")
         #DCOut Related Widgets
         self.ui.buttset_ch0.clicked.connect(self.DCSetCH0)
         self.ui.buttset_ch1.clicked.connect(self.DCSetCH1)
@@ -228,7 +243,7 @@ class openDAC_UI(QMainWindow):
             except ValueError:
                 print("User Error: Invalid DC Voltage Setting")
         else:
-            print("Error    #Ramp1 Event Handlers
+            print("Error: Check Serial Connection")
     def DCSetCH3(self):
         if self.DAC.ready == True:
             try:
@@ -322,9 +337,6 @@ class openDAC_UI(QMainWindow):
         filename = self.ui.leout_fname.text() + "_tt.csv"
         self.DAC.saveToFile(filename)
         print("CSV file saved: " + filename)
-
-
-
 
 
 #GUI Initialization

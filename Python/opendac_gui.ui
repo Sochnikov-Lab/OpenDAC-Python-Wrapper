@@ -20,6 +20,21 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>859</width>
+    <height>360</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>859</width>
+    <height>360</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>OpenDAC Control and Acquisition Interface</string>
   </property>
@@ -1358,7 +1373,7 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>591</width>
+       <width>611</width>
        <height>31</height>
       </rect>
      </property>
