@@ -101,7 +101,6 @@ class openDAC_UI(QMainWindow):
             print("Disconnected Successfully")
             self.ui.buttsp_disconn.setEnabled(False)
             self.ui.buttsp_conn.setEnabled(True)
-    #ACQ1 Event Handlers
     def ACQ1Start(self):
         try:
             samples = int(self.ui.lea1_samples.text())
@@ -126,8 +125,6 @@ class openDAC_UI(QMainWindow):
                 print("Acquire Halted: too many samples (max 20000) or sample rate too fast (max 2kHz)")
         except ValueError:
             print("Error: Issue with values given.")
-
-    #ACQ2 Event Handlers
     def ACQ2Start(self):
         #try:
         samples = int(self.ui.lea2_samples.text())
@@ -161,7 +158,6 @@ class openDAC_UI(QMainWindow):
             print("Acquire Halted: too many samples (max 20000) or sample rate too fast (max 2kHz)")
         #except ValueError:
             print("Error: Issue with values given.")
-    #ACQ4 Event Handlers
     def ACQ4Start(self):
         if self.DAC.ready == True:
             print("CH0,CH1,CH2,CH3 Selected.")
@@ -176,7 +172,6 @@ class openDAC_UI(QMainWindow):
                 print("Error: Issue with values given.")
         else:
             print("Error: Check Serial Connection")
-    #RAR1 Event Handlers
     def RAR1Start(self):
         #ADC Selection:
         if self.ui.rbrr1_ch0.isChecked():
@@ -208,9 +203,6 @@ class openDAC_UI(QMainWindow):
                 print("Error: Check Voltage Range")
         except ValueError:
             print("Error: Issue with values given.")
-
-
-    #RAR4 Event Handlers
     def RAR4Start(self):
         #Do some checks and run:
         try:
@@ -237,8 +229,6 @@ class openDAC_UI(QMainWindow):
                 print("Error: Check Voltage Range")
         except ValueError:
             print("Error: Issue with values given.")
-
-    #DCOut Event Handlers
     def DCSetCH0(self):
         if self.DAC.ready == True:
             try:
@@ -332,7 +322,6 @@ class openDAC_UI(QMainWindow):
                 print("Reset output CH3 to " + str(0.0) + " Volts")
         else:
             print("Error: Check Serial Connection")
-    #SineOut Event Handlers
     def SineOut(self):
         if self.DAC.ready == True:
             try:
@@ -359,13 +348,10 @@ class openDAC_UI(QMainWindow):
                 print("User Error: Invalid Settings for Sine4 output")
         else:
             print("Error: Check Serial Connection")
-
-    #DataOut Event Handlers
     def DataOut_CSV(self):
         filename = self.ui.leout_fname.text() + "_tt.csv"
         self.DAC.saveToFile(filename)
         #print("CSV file saved: " + filename)
-
 
 #GUI Initialization
 myODAC = ODAC()

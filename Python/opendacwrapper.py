@@ -11,7 +11,6 @@ class ODAC(object):
         self.ser = serial.Serial() #Serial Instance
         self.ser.timeout = 0.25 #read timeout --Should fix this to get rid of latency
         self.serIO = io.TextIOWrapper(io.BufferedRWPair(self.ser,self.ser),newline='\r\n')
-
         self.adctimes = []
         #Single CH acquire buffer:
         self.adcbuffer = []
@@ -24,7 +23,6 @@ class ODAC(object):
         self.adcbuffer2 = []
         self.adcbuffer3 = []
 
-    #Attempts to open serial instance
     def open(self,COMPORT,BAUDRATE=115200,verbose=0):
         try:
             self.ser.port = COMPORT
@@ -61,7 +59,6 @@ class ODAC(object):
                 print("============================================")
         except serial.SerialException:
             print("**ODAC: Failed to open serial port**")
-
     def close(self,verbose=0):
         try:
             self.ser.close()
@@ -70,16 +67,13 @@ class ODAC(object):
                 print("**Successfully closed serial port**")
         except serial.SerialException:
             print("o  Failed to close serial port.")
-
     def isReady(self):
         self.serIO.write(unicode('*RDY?\r'))
         self.serIO.flush()
-
         if str(self.serIO.readline()).rstrip().lstrip() == "READY":
             return True
         else:
             return False
-
     def getADC(self,channel):
         self.serIO.write(unicode('GET_ADC,'+ str(channel) + '\r'))
         self.serIO.flush()
@@ -100,6 +94,7 @@ class ODAC(object):
     def ramp2(self,dac1,dac2,v1i,v2i,v1f,v2f,steps,interval):
         self.serIO.write(unicode('RAMP2,'+ str(dac) + ',' + str(v1i) + ',' + str(v2i) + ',' + str(v1f) + ',' + str(v2f) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
+    #RR1 Needs work
     def rampread1(self,adc,dac,v1,v2,steps,interval):
         self.adcbuffer[:] = []
         self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
@@ -108,8 +103,6 @@ class ODAC(object):
         self.serIO.flush()
         #print(adcbufferstr)
         self.adcbuffer = adcbufferstr.split(',') #break string into a list
-        #for i in range(0,len(self.adcbuffer)):
-        #    self.adcbuffer[i] = float(self.adcbuffer[i])
     def rampread4(self,v0,v1,v2,v3,steps,interval):
         self.adctimes[:] = []
         self.adcbuffer[:] = []
@@ -137,8 +130,6 @@ class ODAC(object):
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
-
-    #output a sine wave on one channel
     def sine(self,dac,v0,angfreq,phase,offset,interval):
         commandstr = 'SIN,' + str(dac) + ',' + str(v0) + ',' + str(angfreq) + ',' + str(phase) + ',' + str(offset) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))
@@ -161,17 +152,11 @@ class ODAC(object):
         self.serIO.flush()
         self.serIO.write(unicode(commandstr)) #Send command
         self.serIO.flush()
-
-
         self.ser.timeout = nSteps*stepSize+5.0
-
-
         adcbuffer_full_str = str(self.serIO.read(nSteps*13)) #Full buffer string
-
         self.ser.timeout = 0.25 #return to default timeout
         #Decompose full list string to rows:
         adcbuffer_row_str = adcbuffer_full_str.split("\n")
-
         #convert list into list of values:
         #for i in range(0,len(adcbuffer_row_str)):
         for i in range(0,nSteps):
@@ -181,7 +166,6 @@ class ODAC(object):
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
-
     def acquireTwo(self,adcA,adcB,nSteps,stepSize):
         self.adc1rec = - 3
         self.adcrecA = adcA
@@ -196,8 +180,6 @@ class ODAC(object):
         bufferv_xdim = 4
         bufferv_ydim = 5000
         commandstr = 'ACQ2,' + str(adcA) + ',' + str(adcB) + ',' + str(nSteps) + ',' + str(stepSize) + '\n'
-
-
         if adcA != adcB:
             self.serIO.write(unicode(commandstr))
             self.serIO.flush()
@@ -223,7 +205,6 @@ class ODAC(object):
                     self.adcbuffer2.append(float(rowarrstr[xidx]))
                 if adcA == 3:
                     self.adcbuffer3.append(float(rowarrstr[xidx]))
-
                 if adcB == 0:
                     self.adcbuffer0.append(float(rowarrstr[xidx]))
                 if adcB == 1:
@@ -236,7 +217,6 @@ class ODAC(object):
                 self.adctimes.append(step*stepSize)
         else:
             print("ODAC Error: Duplicate adc channel selected. Canceled acquisition.")
-
     def acquireAll(self,nSteps,stepSize):
 
         self.adc1rec = - 2
@@ -272,14 +252,9 @@ class ODAC(object):
             self.adcbuffer3.append(float(adcbuffer_row_str[step].split(',')[3]))
             #Append times:
             self.adctimes.append(step*stepSize)
-
     def saveToFile(self,filename):
         #datastructure:
         #time,ch0,ch1,ch2,ch3"
-
-
-
-
         #Check sizes of buffers, determine what chs are recorded:
         if self.adc1rec == 0:    #CH0 recorded
             print("Saved CH0 to file")
