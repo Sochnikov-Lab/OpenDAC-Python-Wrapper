@@ -73,6 +73,7 @@ class openDAC_UI(QMainWindow):
         self.ui.buttsin_start.clicked.connect(self.SineOut)
         #DataOut Related Widgets
         self.ui.leout_fname.setText("data")
+        self.ui.butts_csv.clicked.connect(self.DataOut_CSV)
 
     #def BUTTONCLICKEDFUNC(self):
     def about(self):
@@ -128,11 +129,38 @@ class openDAC_UI(QMainWindow):
 
     #ACQ2 Event Handlers
     def ACQ2Start(self):
-        print("Error: 2Ch Acquisition Not Implemented Yet")
-        if not ((self.ui.rba2_ch0A.isChecked() and self.ui.rba2_ch0B.isChecked()) or (self.ui.rba2_ch1A.isChecked() and self.ui.rba2_ch1B.isChecked()) or (self.ui.rba2_ch2A.isChecked() and self.ui.rba2_ch2B.isChecked()) or (self.ui.rba2_ch3A.isChecked() and self.ui.rba2_ch3B.isChecked())):
-            print("Channel Selection Okay")
+        #try:
+        samples = int(self.ui.lea2_samples.text())
+        stepSize = 1.0/float(self.ui.lea2_srate.text())
+        if samples <= 10000 and stepSize >= 1.0/2000.0: #Make sure hardware limits are respected
+            if self.DAC.ready == True:
+                if not ((self.ui.rba2_ch0A.isChecked() and self.ui.rba2_ch0B.isChecked()) or (self.ui.rba2_ch1A.isChecked() and self.ui.rba2_ch1B.isChecked()) or (self.ui.rba2_ch2A.isChecked() and self.ui.rba2_ch2B.isChecked()) or (self.ui.rba2_ch3A.isChecked() and self.ui.rba2_ch3B.isChecked())):
+                    print("Channel Selection Okay")
+                    if self.ui.rba2_ch0A.isChecked():
+                        adcA = 0
+                    if self.ui.rba2_ch1A.isChecked():
+                        adcA = 1
+                    if self.ui.rba2_ch2A.isChecked():
+                        adcA = 2
+                    if self.ui.rba2_ch3A.isChecked():
+                        adcA = 3
+                    if self.ui.rba2_ch0B.isChecked():
+                        adcB = 0
+                    if self.ui.rba2_ch1B.isChecked():
+                        adcB = 1
+                    if self.ui.rba2_ch2B.isChecked():
+                        adcB = 2
+                    if self.ui.rba2_ch3B.isChecked():
+                        adcB = 3
+                    self.DAC.acquireTwo(adcA,adcB,samples,stepSize)
+                else:
+                    print("Error: Incorrect Channel Selection.")
+            else:
+                print("Error: Check Serial Connection")
         else:
-            print("Error: Incorrect Channel Selection.")
+            print("Acquire Halted: too many samples (max 20000) or sample rate too fast (max 2kHz)")
+        #except ValueError:
+            print("Error: Issue with values given.")
     #ACQ4 Event Handlers
     def ACQ4Start(self):
         if self.DAC.ready == True:
@@ -336,7 +364,7 @@ class openDAC_UI(QMainWindow):
     def DataOut_CSV(self):
         filename = self.ui.leout_fname.text() + "_tt.csv"
         self.DAC.saveToFile(filename)
-        print("CSV file saved: " + filename)
+        #print("CSV file saved: " + filename)
 
 
 #GUI Initialization

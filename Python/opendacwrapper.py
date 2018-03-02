@@ -1,5 +1,6 @@
 import serial
 import io
+from math import floor
 
 #Open DAC-ADC Class
 class ODAC(object):
@@ -182,7 +183,6 @@ class ODAC(object):
         del adcbuffer_row_str
 
     def acquireTwo(self,adcA,adcB,nSteps,stepSize):
-
         self.adc1rec = - 3
         self.adcrecA = adcA
         self.adcrecB = adcB
@@ -193,33 +193,49 @@ class ODAC(object):
         self.adcbuffer1[:] = []
         self.adcbuffer2[:] = []
         self.adcbuffer3[:] = []
+        bufferv_xdim = 4
+        bufferv_ydim = 5000
         commandstr = 'ACQ2,' + str(adcA) + ',' + str(adcB) + ',' + str(nSteps) + ',' + str(stepSize) + '\n'
-        self.serIO.write(unicode(commandstr))
-        self.serIO.flush()
 
-        self.ser.timeout = nSteps*stepSize+1.0
-        print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
-        adcbuffer_full_str = str(self.serIO.read(nSteps*52)) #Full buffer string
-        self.ser.timeout = 0.25 #return to default timeout
 
-        #Decompose full list string to rows:
-        adcbuffer_row_str = adcbuffer_full_str.split("\n")
-        #adcbuffer_row_str[0].split(',')[1] EXAMPLE OF: voltage for row 0 ch 1
+        if adcA != adcB:
+            self.serIO.write(unicode(commandstr))
+            self.serIO.flush()
+            self.ser.timeout = nSteps*stepSize+1.0
+            print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
+            adcbuffer_full_str = str(self.serIO.read(nSteps*52)) #Full buffer string
+            self.ser.timeout = 0.25 #return to default timeout
+            #Decompose full list string to rows:
+            adcbuffer_row_str = adcbuffer_full_str.split("\n")
+            #convert each line into list of values, append values to buffers:
+            for step in range(0,nSteps-2):
+                xidx = int(floor((2*step) / bufferv_ydim))
+                yidxA = int(((2*step) % bufferv_ydim))
+                yidxB = int(yidxA + 1)
+                rowarrstr = adcbuffer_row_str[yidxA].split(',')
+                print rowarrstr
+                #Convert each element into a float, save to buffer only if data collected for that channel:
+                if adcA == 0:
+                    self.adcbuffer0.append(float(rowarrstr[xidx]))
+                if adcA == 1:
+                    self.adcbuffer1.append(float(rowarrstr[xidx]))
+                if adcA == 2:
+                    self.adcbuffer2.append(float(rowarrstr[xidx]))
+                if adcA == 3:
+                    self.adcbuffer3.append(float(rowarrstr[xidx]))
 
-        #convert each line into list of values, append values to buffers:
-        for step in range(0,len(adcbuffer_row_str)-1):
-            #print rowstr2
-            #Convert each element into a float, save to buffer only if data collected for that channel:
-            if adcA == 0 or adcB == 0:
-                self.adcbuffer0.append(float(adcbuffer_row_str[step].split(',')[0]))
-            if adcA == 1 or adcB == 1:
-                self.adcbuffer1.append(float(adcbuffer_row_str[step].split(',')[1]))
-            if adcA == 2 or adcB == 2:
-                self.adcbuffer2.append(float(adcbuffer_row_str[step].split(',')[2]))
-            if adcA == 3 or adcB == 3:
-                self.adcbuffer3.append(float(adcbuffer_row_str[step].split(',')[3]))
-            #Append times:
-            self.adctimes.append(step*stepSize)
+                if adcB == 0:
+                    self.adcbuffer0.append(float(rowarrstr[xidx]))
+                if adcB == 1:
+                    self.adcbuffer1.append(float(rowarrstr[xidx]))
+                if adcB == 2:
+                    self.adcbuffer2.append(float(rowarrstr[xidx]))
+                if adcB == 3:
+                    self.adcbuffer3.append(float(rowarrstr[xidx]))
+                #Append times:
+                self.adctimes.append(step*stepSize)
+        else:
+            print("ODAC Error: Duplicate adc channel selected. Canceled acquisition.")
 
     def acquireAll(self,nSteps,stepSize):
 
@@ -261,34 +277,51 @@ class ODAC(object):
         #datastructure:
         #time,ch0,ch1,ch2,ch3"
 
-        datafile = open(filename,'w')
+
 
 
         #Check sizes of buffers, determine what chs are recorded:
         if self.adc1rec == 0:    #CH0 recorded
+            print("Saved CH0 to file")
+            datafile = open(filename,'w')
             datafile.write("time(s),ch0(V),ch1(V),ch2(V),ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer[i]) +",,,\n")
+            datafile.close()
         if self.adc1rec == 1:#CH1 recorded
+            print("Saved CH1 to file")
+            datafile = open(filename,'w')
             datafile.write("time(s),ch0(V),ch1(V),ch2(V),ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + ",," + str(self.adcbuffer[i]) +",,\n")
+            datafile.close()
         if self.adc1rec == 2:#CH2 recorded
+            print("Saved CH2 to file")
+            datafile = open(filename,'w')
             datafile.write("time(s),ch0(V),ch1(V),ch2(V),ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + ",,," + str(self.adcbuffer[i]) +",\n")
+            datafile.close()
         if self.adc1rec == 3:#CH3 recorded
+            print("Saved CH3 to file")
+            datafile = open(filename,'w')
             datafile.write("time(s),ch0(V),ch1(V),ch2(V),ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
+            datafile.close()
         if self.adc1rec == -1:#NOTHING recorded
             print "User Error: No data collected"
         if self.adc1rec == -2:#ALL recorded
+            print("Saved CH0-CH3 to file")
+            datafile = open(filename,'w')
             datafile.write("time(s),ch0(V),ch1(V),ch2(V),ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+            datafile.close()
         if self.adc1rec == -3:#Two recorded
+            print("Saved two channels to file")
+            datafile = open(filename,'w')
             datafile.write("time(s),ch0(V),ch1(V),ch2(V),ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-        datafile.close()
+            datafile.close()

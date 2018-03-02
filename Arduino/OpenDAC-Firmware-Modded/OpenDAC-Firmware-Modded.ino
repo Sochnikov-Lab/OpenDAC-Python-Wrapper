@@ -16,8 +16,8 @@ int drdy = 48; // Data is ready pin on ADC
 int led = 32;
 int data = 28; //Used for trouble shooting; connect an LED between pin 13 and GND
 int err = 30;
-const int Noperations = 18;
-String operations[Noperations] = {"NOP", "SET", "GET_ADC", "RAMP1", "RAMP2", "BUFFER_RAMP", "RESET", "TALK", "CONVERT_TIME", "*IDN?", "*RDY?", "RAR1", "SIN", "ACQA","RARA","SRAMF","ACQ1","SIN4"};
+const int Noperations = 19;
+String operations[Noperations] = {"NOP", "SET", "GET_ADC", "RAMP1", "RAMP2", "BUFFER_RAMP", "RESET", "TALK", "CONVERT_TIME", "*IDN?", "*RDY?", "RAR1", "SIN", "ACQA","RARA","SRAMF","ACQ1","SIN4","ACQ2"};
 
 //Custom Buffer Functions. Buffer should be in the stack.
 const int bufferv_xdim = 4;
@@ -118,12 +118,6 @@ void linearReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
   //Serial.println(' ');
 }
 
-//Reads buffer out in 2 columns (ch: A  B)
-void dualReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int numbersamples)
-{
-  int xextent = floor(2*numbersamples / bufferv_ydim);
-    
-}
 
 
 //Reads buffer out in 4 columns (ch: 0  1  2  3):
@@ -148,6 +142,15 @@ void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
     //Serial.println(' ');
   }
 }
+
+//Ideally reads buffer out in 2 columns (ch: A  B)
+//Temporarily reads out in same style as quadReadBuffer since 
+void dualReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int numbersamples)
+{
+  //int xextent = floor(2*numbersamples / bufferv_ydim);
+  quadReadBuffer(arr,numbersamples);
+}
+
 
 //End Custom Buffer Functions
 
@@ -1079,6 +1082,9 @@ void SRAMF(std::vector<String> DB)
      case 17:
        sinw4(DB);
        break;
+     case 18: //Acquire 1 ch
+       ACQ(DB,2);
+       break; 
 
     default:
       break;
