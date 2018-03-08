@@ -22,8 +22,7 @@ class ODAC(object):
         self.adcbuffer1 = []
         self.adcbuffer2 = []
         self.adcbuffer3 = []
-
-    def open(self,COMPORT,BAUDRATE=115200,verbose=0):
+    def open(self,COMPORT,BAUDRATE=115200):
         try:
             self.ser.port = COMPORT
             self.ser.baudrate = BAUDRATE
@@ -40,6 +39,7 @@ class ODAC(object):
             self.serIO.write(unicode('*IDN?\r'))
             self.serIO.flush()
             self.ID = str(self.serIO.readline()).rstrip().lstrip()
+            self.serIO.flush()
 
             #Check if Device is Ready:
             self.serIO.write(unicode('*RDY?\r'))
@@ -49,16 +49,10 @@ class ODAC(object):
                 self.ready = True
             else:
                 self.ready = False
-
-            if self.ser.isOpen == True and verbose == 1:
-                print("================Connection==================")
-                print("o  Port:            " + self.ser.port)
-                print("o  Baudrate:        " + str(self.ser.baudrate))
-                print("o  DeviceID:        " + self.ID)
-                print("o  Device Status:   " + status)
-                print("============================================")
         except serial.SerialException:
             print("**ODAC: Failed to open serial port**")
+        except UnicodeDecodeError:
+            print("**ODAC: Failed to read serial port. Try again")
     def close(self,verbose=0):
         try:
             self.ser.close()
@@ -166,6 +160,7 @@ class ODAC(object):
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
+    #acq2 needs work
     def acquireTwo(self,adcA,adcB,nSteps,stepSize):
         self.adc1rec = - 3
         self.adcrecA = adcA
