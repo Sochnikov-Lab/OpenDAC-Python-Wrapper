@@ -606,7 +606,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="rbr1_ch4">
+         <widget class="QRadioButton" name="rbr1_ch3">
           <property name="text">
            <string>CH3</string>
           </property>

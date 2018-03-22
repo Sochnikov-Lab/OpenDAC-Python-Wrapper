@@ -173,62 +173,69 @@ class openDAC_UI(QMainWindow):
         else:
             print("Error: Check Serial Connection")
     def RAR1Start(self):
-        #ADC Selection:
-        if self.ui.rbrr1_ch0.isChecked():
-            adc = 0
-        if self.ui.rbrr1_ch1.isChecked():
-            adc = 1
-        if self.ui.rbrr1_ch2.isChecked():
-            adc = 2
-        if self.ui.rbrr1_ch3.isChecked():
-            adc = 3
-        #DAC Selection:
-        if self.ui.rbr1_ch0.isChecked():
-            dac = 0
-        if self.ui.rbr1_ch1.isChecked():
-            dac = 1
-        if self.ui.rbr1_ch2.isChecked():
-            dac = 2
-        if self.ui.rbr1_ch3.isChecked():
-            dac = 3
-        #Do some checks and run:
-        try:
-            v1 = float(self.ui.ler1vi.text())
-            v2 = float(self.ui.ler1vf.text())
-            steps = float(self.ui.ler1_steps.text())
-            interval = float(self.ui.ler1_intrv.text())
-            if v1 >= -10.0 and v1 <= 10.0 and v2 >= -10.0 and v2 <= 10.0:
-                self.DAC.rampread1(self,adc,dac,v1,v2,steps,interval)
-            else:
-                print("Error: Check Voltage Range")
-        except ValueError:
-            print("Error: Issue with values given.")
+        if self.DAC.ready == True:
+
+            #ADC Selection:
+            if self.ui.rbrr1_ch0.isChecked():
+                adc = 0
+            if self.ui.rbrr1_ch1.isChecked():
+                adc = 1
+            if self.ui.rbrr1_ch2.isChecked():
+                adc = 2
+            if self.ui.rbrr1_ch3.isChecked():
+                adc = 3
+            #DAC Selection:
+            if self.ui.rbr1_ch0.isChecked():
+                dac = 0
+            if self.ui.rbr1_ch1.isChecked():
+                dac = 1
+            if self.ui.rbr1_ch2.isChecked():
+                dac = 2
+            if self.ui.rbr1_ch3.isChecked():
+                dac = 3
+            #Do some checks and run:
+            try:
+                v1 = float(self.ui.ler1vi.text())
+                v2 = float(self.ui.ler1vf.text())
+                steps = float(self.ui.ler1_steps.text())
+                interval = float(self.ui.ler1_intrv.text())
+                if v1 >= -10.0 and v1 <= 10.0 and v2 >= -10.0 and v2 <= 10.0:
+                    self.DAC.rampread1(adc,dac,v1,v2,steps,interval)
+                else:
+                    print("Error: Check Voltage Range")
+            except ValueError:
+                print("Error: Issue with values given.")
+        else:
+            print("Error: Check Serial Connection")
     def RAR4Start(self):
-        #Do some checks and run:
-        try:
-            v1_ch0 = float(self.ui.ler4vi_ch0.text())
-            v2_ch0  = float(self.ui.ler4vf_ch0.text())
-            v1_ch1 = float(self.ui.ler4vi_ch1.text())
-            v2_ch1  = float(self.ui.ler4vf_ch1.text())
-            v1_ch2 = float(self.ui.ler4vi_ch2.text())
-            v2_ch2  = float(self.ui.ler4vf_ch2.text())
-            v1_ch3 = float(self.ui.ler4vi_ch3.text())
-            v2_ch3  = float(self.ui.ler4vf_ch3.text())
-            steps = float(self.ui.ler4_steps.text())
-            interval = float(self.ui.ler4_intrv.text())
+        if self.DAC.ready == True:
+            #Do some checks and run:
+            try:
+                v1_ch0 = float(self.ui.ler4vi_ch0.text())
+                v2_ch0  = float(self.ui.ler4vf_ch0.text())
+                v1_ch1 = float(self.ui.ler4vi_ch1.text())
+                v2_ch1  = float(self.ui.ler4vf_ch1.text())
+                v1_ch2 = float(self.ui.ler4vi_ch2.text())
+                v2_ch2  = float(self.ui.ler4vf_ch2.text())
+                v1_ch3 = float(self.ui.ler4vi_ch3.text())
+                v2_ch3  = float(self.ui.ler4vf_ch3.text())
+                steps = float(self.ui.ler4_steps.text())
+                interval = float(self.ui.ler4_intrv.text())
 
-            ch0inrange = v1_ch0 >= -10.0 and v1_ch0 <= 10.0 and v2_ch0 >= -10.0 and v2_ch0 <= 10.0
-            ch1inrange = v1_ch1 >= -10.0 and v1_ch1 <= 10.0 and v2_ch1 >= -10.0 and v2_ch1 <= 10.0
-            ch2inrange = v1_ch2 >= -10.0 and v1_ch2 <= 10.0 and v2_ch2 >= -10.0 and v2_ch2 <= 10.0
-            ch3inrange = v1_ch3 >= -10.0 and v1_ch3 <= 10.0 and v2_ch3 >= -10.0 and v2_ch3 <= 10.0
+                ch0inrange = v1_ch0 >= -10.0 and v1_ch0 <= 10.0 and v2_ch0 >= -10.0 and v2_ch0 <= 10.0
+                ch1inrange = v1_ch1 >= -10.0 and v1_ch1 <= 10.0 and v2_ch1 >= -10.0 and v2_ch1 <= 10.0
+                ch2inrange = v1_ch2 >= -10.0 and v1_ch2 <= 10.0 and v2_ch2 >= -10.0 and v2_ch2 <= 10.0
+                ch3inrange = v1_ch3 >= -10.0 and v1_ch3 <= 10.0 and v2_ch3 >= -10.0 and v2_ch3 <= 10.0
 
-            if ch0inrange and ch1inrange and ch2inrange and ch3inrange:
-                #self.DAC.rampread4(v1,v2,steps,interval)
-                print("RAR4 Not Fully Implemented")
-            else:
-                print("Error: Check Voltage Range")
-        except ValueError:
-            print("Error: Issue with values given.")
+                if ch0inrange and ch1inrange and ch2inrange and ch3inrange:
+                    #self.DAC.rampread4(v1,v2,steps,interval)
+                    print("RAR4 Not Fully Implemented")
+                else:
+                    print("Error: Check Voltage Range")
+            except ValueError:
+                print("Error: Issue with values given.")
+        else:
+            print("Error: Check Serial Connection")
     def DCSetCH0(self):
         if self.DAC.ready == True:
             try:
