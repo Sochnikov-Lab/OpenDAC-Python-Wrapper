@@ -73,6 +73,19 @@ class ODAC(object):
             return True
         else:
             return False
+    def clearBuffers(self):
+        self.adctimes[:] = []
+        self.adcbuffer[:] = []
+        self.adcbuffer0[:] = []
+        self.adcbuffer1[:] = []
+        self.adcbuffer2[:] = []
+        self.adcbuffer3[:] = []
+        self.dacbuffer0[:] = []
+        self.dacbuffer1[:] = []
+        self.dacbuffer2[:] = []
+        self.dacbuffer3[:] = []
+        self.adcrecA = -1
+        self.adcrecB = -1
     def getADC(self,channel):
         self.serIO.write(unicode('GET_ADC,'+ str(channel) + '\r'))
         self.serIO.flush()
@@ -95,19 +108,9 @@ class ODAC(object):
         self.serIO.flush()
     #RR1 Needs work
     def rampread1(self,adc,dac,v1,v2,steps,interval):
-        self.adctimes[:] = []
-        self.adcbuffer[:] = []
-        self.adcbuffer0[:] = []
-        self.adcbuffer1[:] = []
-        self.adcbuffer2[:] = []
-        self.adcbuffer3[:] = []
-        self.dacbuffer0[:] = []
-        self.dacbuffer1[:] = []
-        self.dacbuffer2[:] = []
-        self.dacbuffer3[:] = []
+        self.clearBuffers()
         self.adc1rec = -4 #-4 = rampread1 or rampread4
         voltagestep = (v2 - v1)/steps
-
         self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
 
@@ -173,16 +176,7 @@ class ODAC(object):
                 self.dacbuffer3.append(v1 + voltagestep*step)
 
     def rampread4(self,v0,v1,v2,v3,steps,interval):
-        self.adctimes[:] = []
-        self.adcbuffer[:] = []
-        self.adcbuffer0[:] = []
-        self.adcbuffer1[:] = []
-        self.adcbuffer2[:] = []
-        self.adcbuffer3[:] = []
-        self.dacbuffer0[:] = []
-        self.dacbuffer1[:] = []
-        self.dacbuffer2[:] = []
-        self.dacbuffer3[:] = []
+        self.clearBuffers()
         self.adc1rec = -4 #-4 = rampread1 or rampread4
         voltagestep = [(v0[1]-v0[0])/steps,(v1[1]-v1[0])/steps,(v2[1]-v2[0])/steps,(v3[1]-v3[0])/steps]
         self.serIO.write(unicode('RARA,'+ str(v0[0]) + ',' + str(v0[1]) + ',' + str(v1[0]) + ',' + str(v1[1]) + ',' + str(v2[0]) + ',' + str(v2[1]) + ',' + str(v3[0]) + ',' + str(v3[1]) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
@@ -217,16 +211,9 @@ class ODAC(object):
         commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))
     def acquireOne(self,adc,nSteps,stepSize):
+        self.clearBuffers()
         self.adc1rec = adc
-        self.adcrecA = -1
-        self.adcrecB = -1
         #Clear buffers:
-        self.adctimes[:] = []
-        self.adcbuffer[:] = []
-        self.adcbuffer0[:] = []
-        self.adcbuffer1[:] = []
-        self.adcbuffer2[:] = []
-        self.adcbuffer3[:] = []
         commandstr = 'ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n'
         print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
         self.serIO.flush()
@@ -249,15 +236,10 @@ class ODAC(object):
     #acq2 needs work
     def acquireTwo(self,adcA,adcB,nSteps,stepSize):
         self.adc1rec = - 3
+        self.clearBuffers()
         self.adcrecA = adcA
         self.adcrecB = adcB
         #Clear buffers
-        self.adctimes[:] = []
-        self.adcbuffer[:] = []
-        self.adcbuffer0[:] = []
-        self.adcbuffer1[:] = []
-        self.adcbuffer2[:] = []
-        self.adcbuffer3[:] = []
         bufferv_xdim = 4
         bufferv_ydim = 5000
         commandstr = 'ACQ2,' + str(adcA) + ',' + str(adcB) + ',' + str(nSteps) + ',' + str(stepSize) + '\n'
@@ -309,35 +291,20 @@ class ODAC(object):
             if len(self.adcbuffer3) == 0:
                 for step in range(0,nSteps-2):
                     self.adcbuffer3.append('')
-
-
         else:
             print("ODAC Error: Duplicate adc channel selected. Canceled acquisition.")
     def acquireAll(self,nSteps,stepSize):
-
+        self.clearBuffers()
         self.adc1rec = - 2
-        self.adcrecA = -1
-        self.adcrecB = -1
-        #Clear buffers
-        self.adctimes[:] = []
-        self.adcbuffer[:] = []
-        self.adcbuffer0[:] = []
-        self.adcbuffer1[:] = []
-        self.adcbuffer2[:] = []
-        self.adcbuffer3[:] = []
         commandstr = 'ACQA,' + str(nSteps) + ',' + str(stepSize) + '\n'
         self.serIO.write(unicode(commandstr))
         self.serIO.flush()
-
         self.ser.timeout = nSteps*stepSize+1.0
         print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
         adcbuffer_full_str = str(self.serIO.read(nSteps*52)) #Full buffer string
         self.ser.timeout = 0.25 #return to default timeout
-
         #Decompose full list string to rows:
         adcbuffer_row_str = adcbuffer_full_str.split("\n")
-        #adcbuffer_row_str[0].split(',')[1] EXAMPLE OF: voltage for row 0 ch 1
-
         #convert each line into list of values, append values to buffers:
         for step in range(0,len(adcbuffer_row_str)-1):
             #print rowstr2
