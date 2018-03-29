@@ -110,20 +110,30 @@ class ODAC(object):
 
         self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
-        adcbufferstr = str(self.serIO.readline()).rstrip().lstrip() #read ascii from serial port
+
+        #adcbufferstr = str(self.serIO.readline()).rstrip().lstrip() #read ascii from serial port
+        self.ser.timeout = steps*interval+5.0
+        adcbufferstr = str(self.serIO.read(int(steps)*13)) #Full buffer string
+        self.ser.timeout = 0.25 #return to default timeout
+        #Decompose full list string to rows:
+        adcbufferrowstr = adcbufferstr.split("\n")
+
         self.serIO.flush()
         if adc == 0:
-            self.adcbuffer0 = adcbufferstr.split(',')
+            for i in range(0,len(adcbufferrowstr)):
+                self.adcbuffer0.append(float(adcbufferrowstr[i]))
         if adc == 1:
-            self.adcbuffer1 = adcbufferstr.split(',')
+            for i in range(0,len(adcbufferrowstr)):
+                self.adcbuffer1.append(float(adcbufferrowstr[i]))
         if adc == 2:
-            self.adcbuffer2 = adcbufferstr.split(',')
+            for i in range(0,len(adcbufferrowstr)):
+                self.adcbuffer2.append(float(adcbufferrowstr[i]))
         if adc == 3:
-            self.adcbuffer3 = adcbufferstr.split(',')
+            for i in range(0,len(adcbufferrowstr)):
+                self.adcbuffer3.append(float(adcbufferrowstr[i]))
 
         for step in range(0,int(steps)):
             self.adctimes.append(step*interval)
-
             #Fill in unused arrays (fixes save-to-file function error for empty lists)
             if adc == 0:
                 self.adcbuffer1.append('')
@@ -379,6 +389,14 @@ class ODAC(object):
             print("Saved Ramp and Read CH0 to file")
             datafile = open(filename,'w')
             datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+            print len(self.dacbuffer0)
+            print len(self.dacbuffer1)
+            print len(self.dacbuffer2)
+            print len(self.dacbuffer3)
+            print len(self.adcbuffer0)
+            print len(self.adcbuffer1)
+            print len(self.adcbuffer2)
+            print len(self.adcbuffer3)
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
             datafile.close()

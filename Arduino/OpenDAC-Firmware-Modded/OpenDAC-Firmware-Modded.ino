@@ -208,6 +208,17 @@ void blinker(int s) {
   digitalWrite(data, LOW);
   delay(s);
 }
+
+void dataLED_on()
+{
+  digitalWrite(data, HIGH);
+}
+
+void dataLED_off()
+{
+  digitalWrite(data, LOW);
+}
+
 void sos() {
   blinker(50);
   blinker(50);
@@ -760,6 +771,7 @@ void RAR(std::vector<String> DB,int nCh)
     int adcChannel = fixMapADC(DB[1].toInt());
 
     //Ramp through values and save into buffer
+    dataLED_on();
     for (int j = 0; j < nSteps; j++)
     {
       int timer = micros();
@@ -771,6 +783,7 @@ void RAR(std::vector<String> DB,int nCh)
       //read voltage from ADC
       while (micros() <= timer + DB[6].toInt());
     }
+    dataLED_off();
   }
   else
   {
@@ -789,6 +802,7 @@ void RAR(std::vector<String> DB,int nCh)
     vf[3] = DB[8].toFloat();
 
     //Ramp through values and save into buffer
+    dataLED_on();
     for (int j = 0; j < nSteps; j++)
     {
       int timer = micros();
@@ -803,9 +817,11 @@ void RAR(std::vector<String> DB,int nCh)
       //read voltage from ADC
       while (micros() <= timer + StepDelay);
     }
+    dataLED_off();
   }
 
   //Read out buffer:
+  dataLED_on();
   if(nCh == 1)
   {
     linearReadBuffer(bufferv,DB[5].toInt());
@@ -814,6 +830,7 @@ void RAR(std::vector<String> DB,int nCh)
   {
     quadReadBuffer(bufferv,DB[9].toInt());
   }
+  dataLED_off();
 
   //Clear buffer:
   clearbuffer(bufferv);
@@ -829,6 +846,7 @@ void ACQ(std::vector<String> DB,int nCh)
 //Read from ADC
   if(nCh == 1)
   {
+    dataLED_on();
     //Syntax: ACQ1,ADC#,nSamples,sampleStep
     //Converting serial string into variables:
     int adcChannel = fixMapADC(DB[1].toInt());
@@ -849,9 +867,11 @@ void ACQ(std::vector<String> DB,int nCh)
       linearWriteToBuffer(bufferv,j,getSingleReading(adcChannel));
       while (micros() <= timer + sampleStep);
     }
+    dataLED_off();
   }
   else if (nCh == 2)
   {
+    dataLED_on();
     //Syntax: ACQ1,ADC_A#,ADC_B#,nSamples,sampleStep
     //Converting serial string into variables:
     int adcChannelA = fixMapADC(DB[1].toInt());
@@ -873,10 +893,12 @@ void ACQ(std::vector<String> DB,int nCh)
       dualWriteToBuffer(bufferv,j,getSingleReading(adcChannelA),getSingleReading(adcChannelB));
       while (micros() <= timer + sampleStep);
     }
+    dataLED_off();
   }
   //no 3ch Acquisition!
   else if (nCh == 4)
   {
+    dataLED_on();
     //Syntax: ACQ4,nSamples,sampleStep
     //Converting serial string into variables:
     int nSamples = DB[1].toInt(); // Input seconds but internally microsec
@@ -896,9 +918,11 @@ void ACQ(std::vector<String> DB,int nCh)
       quadWriteToBuffer(bufferv,j,getSingleReading(fixMapADC(0)), getSingleReading(fixMapADC(1)), getSingleReading(fixMapADC(2)), getSingleReading(fixMapADC(3)));
       while (micros() <= timer + sampleStep);
     }
+    dataLED_off();
   }
 
   //Read out buffer:
+  dataLED_on();
   if(nCh == 1)
   {
     linearReadBuffer(bufferv,nSamplesToRead);
@@ -907,6 +931,7 @@ void ACQ(std::vector<String> DB,int nCh)
   {
     quadReadBuffer(bufferv,nSamplesToRead);
   }
+  dataLED_off();
 
   //Clear buffer:
   clearbuffer(bufferv);
@@ -939,6 +964,8 @@ void sinw(std::vector<String> DB)
     while (micros() <= timer + interval);
   }
   */
+  dataLED_on();
+
   float timer0 = micros(); //Time at start of wave
   while((micros() - timer0) <= interval*1000.0) // run only when wave ran for the requested interval
   {
@@ -946,11 +973,13 @@ void sinw(std::vector<String> DB)
     writeDAC(dacChannel, vdc + v0 * sin(w * ((micros()-timer0)/ 1000000.0) + phi));
     digitalWrite(data, LOW);
   }
+  dataLED_off();
 }
 //Sine Wave out
 //Syntax: SIN,DAC#,V0,ANGFREQ(rads/sec),PHASE(radians),OFFSET,duration(ms)
 void sinw4(std::vector<String> DB)
 {
+  
   float v00 = DB[1].toFloat();
   float v01 = DB[2].toFloat();
   float v02 = DB[3].toFloat();
@@ -969,8 +998,10 @@ void sinw4(std::vector<String> DB)
   float vdc3 = DB[16].toFloat();
   float interval = DB[17].toFloat();
 
+  dataLED_on();
   //Suggest to use pre-computed table for sine waves to avoid the phase delays(120us)
   float timer0 = micros(); //Time at start of wave
+  
   while((micros() - timer0) <= interval*1000.0) // run only when wave ran for the requested interval
   {
     digitalWrite(data, HIGH);
@@ -980,6 +1011,7 @@ void sinw4(std::vector<String> DB)
     writeDAC(3, vdc3 + v03 * sin(w2 * ((micros()-timer0-360)/ 1000000.0) + phi3));
     digitalWrite(data, LOW);
   }
+  dataLED_off();
 }
 /*
 void SRAMF(std::vector<String> DB)
