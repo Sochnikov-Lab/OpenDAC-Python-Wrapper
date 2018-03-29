@@ -211,25 +211,21 @@ class openDAC_UI(QMainWindow):
         if self.DAC.ready == True:
             #Do some checks and run:
             try:
-                v1_ch0 = float(self.ui.ler4vi_ch0.text())
-                v2_ch0  = float(self.ui.ler4vf_ch0.text())
-                v1_ch1 = float(self.ui.ler4vi_ch1.text())
-                v2_ch1  = float(self.ui.ler4vf_ch1.text())
-                v1_ch2 = float(self.ui.ler4vi_ch2.text())
-                v2_ch2  = float(self.ui.ler4vf_ch2.text())
-                v1_ch3 = float(self.ui.ler4vi_ch3.text())
-                v2_ch3  = float(self.ui.ler4vf_ch3.text())
+                v0 = [float(self.ui.ler4vi_ch0.text()),float(self.ui.ler4vf_ch0.text())]
+                v1 = [float(self.ui.ler4vi_ch1.text()),float(self.ui.ler4vf_ch1.text())]
+                v2 = [float(self.ui.ler4vi_ch2.text()),float(self.ui.ler4vf_ch2.text())]
+                v3 = [float(self.ui.ler4vi_ch3.text()),float(self.ui.ler4vf_ch3.text())]
                 steps = float(self.ui.ler4_steps.text())
                 interval = float(self.ui.ler4_intrv.text())
 
-                ch0inrange = v1_ch0 >= -10.0 and v1_ch0 <= 10.0 and v2_ch0 >= -10.0 and v2_ch0 <= 10.0
-                ch1inrange = v1_ch1 >= -10.0 and v1_ch1 <= 10.0 and v2_ch1 >= -10.0 and v2_ch1 <= 10.0
-                ch2inrange = v1_ch2 >= -10.0 and v1_ch2 <= 10.0 and v2_ch2 >= -10.0 and v2_ch2 <= 10.0
-                ch3inrange = v1_ch3 >= -10.0 and v1_ch3 <= 10.0 and v2_ch3 >= -10.0 and v2_ch3 <= 10.0
+                ch0inrange = v0[0] >= -10.0 and v0[0] <= 10.0 and v0[1] >= -10.0 and v0[1]  <= 10.0
+                ch1inrange = v1[0] >= -10.0 and v1[0] <= 10.0 and v1[1] >= -10.0 and v1[1] <= 10.0
+                ch2inrange = v2[0] >= -10.0 and v2[0] <= 10.0 and v2[1] >= -10.0 and v2[1] <= 10.0
+                ch3inrange = v3[0] >= -10.0 and v3[0] <= 10.0 and v3[1] >= -10.0 and v3[1] <= 10.0
 
                 if ch0inrange and ch1inrange and ch2inrange and ch3inrange:
-                    #self.DAC.rampread4(v1,v2,steps,interval)
-                    print("RAR4 Not Fully Implemented")
+                    print("RAR4 Started.")
+                    self.DAC.rampread4(v0,v1,v2,v3,steps,interval)
                 else:
                     print("Error: Check Voltage Range")
             except ValueError:

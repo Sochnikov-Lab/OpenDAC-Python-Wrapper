@@ -152,25 +152,25 @@ class ODAC(object):
                 self.adcbuffer1.append('')
                 self.adcbuffer2.append('')
             if dac == 0:
-                self.dacbuffer0.append(voltagestep*step)
+                self.dacbuffer0.append(v1 + voltagestep*step)
                 self.dacbuffer1.append('')
                 self.dacbuffer2.append('')
                 self.dacbuffer3.append('')
             if dac == 1:
                 self.dacbuffer0.append('')
-                self.dacbuffer1.append(voltagestep*step)
+                self.dacbuffer1.append(v1 + voltagestep*step)
                 self.dacbuffer2.append('')
                 self.dacbuffer3.append('')
             if dac == 2:
                 self.dacbuffer0.append('')
                 self.dacbuffer1.append('')
-                self.dacbuffer2.append(voltagestep*step)
+                self.dacbuffer2.append(v1 + voltagestep*step)
                 self.dacbuffer3.append('')
             if dac == 3:
                 self.dacbuffer0.append('')
                 self.dacbuffer1.append('')
                 self.dacbuffer2.append('')
-                self.dacbuffer3.append(voltagestep*step)
+                self.dacbuffer3.append(v1 + voltagestep*step)
 
     def rampread4(self,v0,v1,v2,v3,steps,interval):
         self.adctimes[:] = []
@@ -179,9 +179,15 @@ class ODAC(object):
         self.adcbuffer1[:] = []
         self.adcbuffer2[:] = []
         self.adcbuffer3[:] = []
+        self.dacbuffer0[:] = []
+        self.dacbuffer1[:] = []
+        self.dacbuffer2[:] = []
+        self.dacbuffer3[:] = []
+        self.adc1rec = -4 #-4 = rampread1 or rampread4
+        voltagestep = [(v0[1]-v0[0])/steps,(v1[1]-v1[0])/steps,(v2[1]-v2[0])/steps,(v3[1]-v3[0])/steps]
         self.serIO.write(unicode('RARA,'+ str(v0[0]) + ',' + str(v0[1]) + ',' + str(v1[0]) + ',' + str(v1[1]) + ',' + str(v2[0]) + ',' + str(v2[1]) + ',' + str(v3[0]) + ',' + str(v3[1]) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
-        self.serIO.flush2()
-        adcbuffer_full_str = str(self.serIO.read(nSteps*13)) #Full buffer string
+        self.serIO.flush()
+        adcbuffer_full_str = str(self.serIO.read(int(steps)*13)) #Full buffer string
         self.serIO.flush()
         #Decompose full list string to rows:
         adcbuffer_row_str = adcbuffer_full_str.split("\n")
@@ -194,8 +200,13 @@ class ODAC(object):
             self.adcbuffer1.append(float(adcbuffer_row_str[step].split(',')[1]))
             self.adcbuffer2.append(float(adcbuffer_row_str[step].split(',')[2]))
             self.adcbuffer3.append(float(adcbuffer_row_str[step].split(',')[3]))
+            #Record DAC values:
+            self.dacbuffer0.append(v0[0] + step*voltagestep[0])
+            self.dacbuffer1.append(v1[0] + step*voltagestep[1])
+            self.dacbuffer2.append(v2[0] + step*voltagestep[2])
+            self.dacbuffer3.append(v3[0] + step*voltagestep[3])
             #Append times:
-            self.adctimes.append(step*stepSize)
+            self.adctimes.append(step*interval)
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
