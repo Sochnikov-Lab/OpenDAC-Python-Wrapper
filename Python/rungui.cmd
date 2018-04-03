@@ -1,1 +1,1 @@
-python opendac_gui.py
+START /B python opendac_gui.py > "cmd_output.txt"
