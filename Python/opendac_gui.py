@@ -1,3 +1,15 @@
+#####OpenDAC Graphical Interface#####
+#opendac_gui.py
+#Written by J. Sheldon for the Sochnikov lab group at UConn Physics Department
+#
+#This is the code for our OpenDAC controller application. It contains the GUI
+#"Glue" code between the UI design file and the wrapper object ODAC. It also
+#contains user input validation to attempt to thwart crashing and illegal operations.
+#Complete usage of this GUI requires the opendacwrapper.py and opendac_gui.ui file.
+#In addition, PyQT5 and PySerial need to be installed and The OpenDAC DAC-ADC also
+#needs our custom firmware installed.
+
+
 import sys
 import serial
 import io
@@ -7,20 +19,12 @@ from opendacwrapper import ODAC
 from time import sleep
 from math import pi
 
-class aboutWindow_UI(QMainWindow):
-    def __init__(self):
-        QMainWindow.__init__(self)
-        self.ui = uic.loadUi("aboutwindow.ui")
-
 class openDAC_UI(QMainWindow):
     def __init__(self,myODAC):
         QMainWindow.__init__(self)
         self.ui = uic.loadUi("opendac_gui.ui")
         self.DAC = myODAC
         #Bindings:
-        #self.BUTTON.clicked.connect(self.BUTTONCLICKEDFUNC)
-        self.ui.aboutButton.clicked.connect(self.about)
-
         #Serial Related Widgets
         self.ui.buttsp_conn.clicked.connect(self.serialConnect)
         self.ui.buttsp_disconn.clicked.connect(self.serialDisconnect)
@@ -29,12 +33,10 @@ class openDAC_UI(QMainWindow):
         self.ui.butta1_start.clicked.connect(self.ACQ1Start)
         self.ui.lea1_samples.setText("20000")
         self.ui.lea1_srate.setText("2000")
-
         #ACQ2 Related Widgets
         self.ui.butta2_start.clicked.connect(self.ACQ2Start)
         self.ui.lea2_samples.setText("10000")
         self.ui.lea2_srate.setText("2000")
-
         #ACQ4 Related Widgets
         self.ui.butta4_start.clicked.connect(self.ACQ4Start)
         self.ui.lea4_samples.setText("5000")
@@ -74,19 +76,11 @@ class openDAC_UI(QMainWindow):
         #DataOut Related Widgets
         self.ui.leout_fname.setText("data")
         self.ui.butts_csv.clicked.connect(self.DataOut_CSV)
-
-    #def BUTTONCLICKEDFUNC(self):
-    def about(self):
-        aboutWindow = aboutWindow_UI()
-        aboutWindow.ui.show()
-    #Serial Connection Event Handlers
     def serialConnect(self):#Evt Handler for serial connect button
-
         port = self.ui.coboxsp_prt.currentText()
         baud = self.ui.lesp_baud.text()
         print("Attempting to connect to: " + str(port) + ":" + str(baud))
         self.DAC.open(port,baud)
-        #sleep(1)
         if self.DAC.ready == True:
             print("Connected Successfully")
             self.ui.buttsp_disconn.setEnabled(True)
@@ -102,9 +96,14 @@ class openDAC_UI(QMainWindow):
             self.ui.buttsp_disconn.setEnabled(False)
             self.ui.buttsp_conn.setEnabled(True)
     def ACQ1Start(self):
-        try:
+        failed = 0
+        try: #check for value error (unexepected datatype)
             samples = int(self.ui.lea1_samples.text())
             stepsize = 1.0/float(self.ui.lea1_srate.text())
+        except ValueError:
+            print("Error: Issue with values given.")
+            failed = 1
+        if failed == 0:
             if samples <= 20000 and stepsize >= 1.0/2000.0: #Make sure hardware limits are respected
                 if self.DAC.ready == True:
                     if self.ui.rba1_ch0.isChecked(): #Ch0 radiobutton selected
@@ -123,53 +122,62 @@ class openDAC_UI(QMainWindow):
                     print("Error: Check Serial Connection")
             else:
                 print("Acquire Halted: too many samples (max 20000) or sample rate too fast (max 2kHz)")
+        else:
+            print("Error: User input bad. Check input fields.")
+    def ACQ2Start(self):
+        failed = 0
+        try:
+            samples = int(self.ui.lea2_samples.text())
+            stepSize = 1.0/float(self.ui.lea2_srate.text())
         except ValueError:
             print("Error: Issue with values given.")
-    def ACQ2Start(self):
-        #try:
-        samples = int(self.ui.lea2_samples.text())
-        stepSize = 1.0/float(self.ui.lea2_srate.text())
-        if samples <= 10000 and stepSize >= 1.0/2000.0: #Make sure hardware limits are respected
-            if self.DAC.ready == True:
-                if not ((self.ui.rba2_ch0A.isChecked() and self.ui.rba2_ch0B.isChecked()) or (self.ui.rba2_ch1A.isChecked() and self.ui.rba2_ch1B.isChecked()) or (self.ui.rba2_ch2A.isChecked() and self.ui.rba2_ch2B.isChecked()) or (self.ui.rba2_ch3A.isChecked() and self.ui.rba2_ch3B.isChecked())):
-                    print("Channel Selection Okay")
-                    if self.ui.rba2_ch0A.isChecked():
-                        adcA = 0
-                    if self.ui.rba2_ch1A.isChecked():
-                        adcA = 1
-                    if self.ui.rba2_ch2A.isChecked():
-                        adcA = 2
-                    if self.ui.rba2_ch3A.isChecked():
-                        adcA = 3
-                    if self.ui.rba2_ch0B.isChecked():
-                        adcB = 0
-                    if self.ui.rba2_ch1B.isChecked():
-                        adcB = 1
-                    if self.ui.rba2_ch2B.isChecked():
-                        adcB = 2
-                    if self.ui.rba2_ch3B.isChecked():
-                        adcB = 3
-                    self.DAC.acquireTwo(adcA,adcB,samples,stepSize)
+            failed = 1
+        if failed == 0:
+            if samples <= 10000 and stepSize >= 1.0/2000.0: #Make sure hardware limits are respected
+                if self.DAC.ready == True:
+                    if not ((self.ui.rba2_ch0A.isChecked() and self.ui.rba2_ch0B.isChecked()) or (self.ui.rba2_ch1A.isChecked() and self.ui.rba2_ch1B.isChecked()) or (self.ui.rba2_ch2A.isChecked() and self.ui.rba2_ch2B.isChecked()) or (self.ui.rba2_ch3A.isChecked() and self.ui.rba2_ch3B.isChecked())):
+                        print("Channel Selection Okay")
+                        if self.ui.rba2_ch0A.isChecked():
+                            adcA = 0
+                        if self.ui.rba2_ch1A.isChecked():
+                            adcA = 1
+                        if self.ui.rba2_ch2A.isChecked():
+                            adcA = 2
+                        if self.ui.rba2_ch3A.isChecked():
+                            adcA = 3
+                        if self.ui.rba2_ch0B.isChecked():
+                            adcB = 0
+                        if self.ui.rba2_ch1B.isChecked():
+                            adcB = 1
+                        if self.ui.rba2_ch2B.isChecked():
+                            adcB = 2
+                        if self.ui.rba2_ch3B.isChecked():
+                            adcB = 3
+                        self.DAC.acquireTwo(adcA,adcB,samples,stepSize)
+                    else:
+                        print("Error: Incorrect Channel Selection.")
                 else:
-                    print("Error: Incorrect Channel Selection.")
+                    print("Error: Check Serial Connection")
             else:
-                print("Error: Check Serial Connection")
+                print("Acquire Halted: too many samples (max 20000) or sample rate too fast (max 2kHz)")
         else:
-            print("Acquire Halted: too many samples (max 20000) or sample rate too fast (max 2kHz)")
-        #except ValueError:
-            print("Error: Issue with values given.")
+            print("Error: User input bad. Check input fields.")
     def ACQ4Start(self):
         if self.DAC.ready == True:
-            print("CH0,CH1,CH2,CH3 Selected.")
+            failed = 0
             try:
                 samples = int(self.ui.lea4_samples.text())
                 stepsize = 1.0/float(self.ui.lea4_srate.text())
+            except ValueError:
+                print("Error: Issue with values given.")
+                failed = 1
+            if failed == 0:
                 if samples <= 5000 and stepsize >= 1.0/2000.0:    #Ramp1 Event Handlers
                     self.DAC.acquireAll(samples,stepsize)
                 else:
                     print("Acquire Halted: too many samples (max 5000) or sample rate too fast (max 2kHz)")
-            except ValueError:
-                print("Error: Issue with values given.")
+            else:
+                print("Error: User input bad. Check input fields.")
         else:
             print("Error: Check Serial Connection")
     def RAR1Start(self):
@@ -194,22 +202,29 @@ class openDAC_UI(QMainWindow):
             if self.ui.rbr1_ch3.isChecked():
                 dac = 3
             #Do some checks and run:
+            failed = 0
             try:
                 v1 = float(self.ui.ler1vi.text())
                 v2 = float(self.ui.ler1vf.text())
                 steps = float(self.ui.ler1_steps.text())
                 interval = float(self.ui.ler1_intrv.text())
+            except ValueError:
+                print("Error: Issue with values given.")
+                failed = 1
+            if failed == 0:
                 if v1 >= -10.0 and v1 <= 10.0 and v2 >= -10.0 and v2 <= 10.0:
                     self.DAC.rampread1(adc,dac,v1,v2,steps,interval)
                 else:
                     print("Error: Check Voltage Range")
-            except ValueError:
-                print("Error: Issue with values given.")
+            else:
+                print("Error: User input bad. Check input fields.")
+
         else:
             print("Error: Check Serial Connection")
     def RAR4Start(self):
         if self.DAC.ready == True:
             #Do some checks and run:
+            failed = 0
             try:
                 v0 = [float(self.ui.ler4vi_ch0.text()),float(self.ui.ler4vf_ch0.text())]
                 v1 = [float(self.ui.ler4vi_ch1.text()),float(self.ui.ler4vf_ch1.text())]
@@ -217,19 +232,22 @@ class openDAC_UI(QMainWindow):
                 v3 = [float(self.ui.ler4vi_ch3.text()),float(self.ui.ler4vf_ch3.text())]
                 steps = float(self.ui.ler4_steps.text())
                 interval = float(self.ui.ler4_intrv.text())
-
                 ch0inrange = v0[0] >= -10.0 and v0[0] <= 10.0 and v0[1] >= -10.0 and v0[1]  <= 10.0
                 ch1inrange = v1[0] >= -10.0 and v1[0] <= 10.0 and v1[1] >= -10.0 and v1[1] <= 10.0
                 ch2inrange = v2[0] >= -10.0 and v2[0] <= 10.0 and v2[1] >= -10.0 and v2[1] <= 10.0
                 ch3inrange = v3[0] >= -10.0 and v3[0] <= 10.0 and v3[1] >= -10.0 and v3[1] <= 10.0
-
+            except ValueError:
+                print("Error: Issue with values given.")
+                failed = 1
+            if failed == 0:
                 if ch0inrange and ch1inrange and ch2inrange and ch3inrange:
                     print("RAR4 Started.")
                     self.DAC.rampread4(v0,v1,v2,v3,steps,interval)
                 else:
                     print("Error: Check Voltage Range")
-            except ValueError:
-                print("Error: Issue with values given.")
+            else:
+                print("Error: User input bad. Check input fields.")
+
         else:
             print("Error: Check Serial Connection")
     def DCSetCH0(self):
