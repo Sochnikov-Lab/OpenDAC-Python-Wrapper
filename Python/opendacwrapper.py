@@ -195,10 +195,14 @@ class ODAC(object):
         self.serIO.write(unicode('RARA,'+ str(v0[0]) + ',' + str(v0[1]) + ',' + str(v1[0]) + ',' + str(v1[1]) + ',' + str(v2[0]) + ',' + str(v2[1]) + ',' + str(v3[0]) + ',' + str(v3[1]) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
         #Read serial data:
-        adcbuffer_full_str = str(self.serIO.read(int(steps)*13)) #Full buffer string
+        self.ser.timeout = steps*interval+5
+        adcbuffer_full_str = str(self.serIO.read(int(steps)*52)) #Full buffer string
+        self.ser.timeout = 0.25
         self.serIO.flush()
+
         #Decompose full list string to rows:
         adcbuffer_row_str = adcbuffer_full_str.split("\n")
+        print adcbuffer_row_str
         #adcbuffer_row_str[0].split(',')[1]: voltage for row 0 ch 1
         #convert each line into list of values, append values to buffers:
         for step in range(0,len(adcbuffer_row_str)-1):
