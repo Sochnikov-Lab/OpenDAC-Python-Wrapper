@@ -9,6 +9,7 @@
 import serial
 import io
 from math import floor
+import time
 
 #DAC-ADC Controller Class
 class ODAC(object):
@@ -221,6 +222,42 @@ class ODAC(object):
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
+    def rampread4NB(self,v0,v1,v2,v3,steps,subsamples,interval,settle,dwell,filename):
+        #setup and flags:
+        self.clearBuffers()
+        self.adc1rec = -4 #-4 = rampread1 or rampread4
+        voltagestep = [(v0[1]-v0[0])/steps,(v1[1]-v1[0])/steps,(v2[1]-v2[0])/steps,(v3[1]-v3[0])/steps]
+        datafile = open(filename,'w')
+        datafile.write("time,DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+
+        for step in range(0,steps):
+            print("Step " + str(step) + "of " str(steps) + ".")
+            #Set DAC voltages for this step:
+            self.setDAC(0,v0[0]+step*voltagestep[0])
+            self.setDAC(1,v1[0]+step*voltagestep[1])
+            self.setDAC(2,v2[0]+step*voltagestep[2])
+            self.setDAC(3,v3[0]+step*voltagestep[3])
+            #Record inferred DAC values:
+            dacv0 = v0[0] + step*voltagestep[0]
+            dacv1 = v1[0] + step*voltagestep[1]
+            dacv2 = v2[0] + step*voltagestep[2]
+            dacv3 = v3[0] + step*voltagestep[3]
+            #Wait for DAC levels to settle:
+            time.sleep(settle)
+            #sub sample loop:
+            for subsample in range(0,subsamples):
+                datafile = open(filename,'w')
+                #Record timestamp
+                timestamp = time.strftime("%d-%m-%y,%H:%M:%S.%L")
+                #Read ADC and save values:
+                adcv0 = float(self.getADC(0))
+                adcv1 = float(self.getADC(1))
+                adcv2 = float(self.getADC(2))
+                adcv3 = float(self.getADC(3))
+                #save to file:
+                datafile.write(str(timestamp) + "," + str(dacv0) + "," + str(dacv1) + "," + str(dacv2) + "," + str(dacv3) + "," + str(adcv0) + "," + str(adcv1) + "," + str(adcv2) + "," + str(adcv3) + "\n")
+                time.sleep(dwell)
+            time.sleep(interval-subsamples*dwell-settle) #Unknown contribution from saving left out
     def sine(self,dac,v0,angfreq,phase,offset,interval):
         commandstr = 'SIN,' + str(dac) + ',' + str(v0) + ',' + str(angfreq) + ',' + str(phase) + ',' + str(offset) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))

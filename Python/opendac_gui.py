@@ -60,6 +60,21 @@ class openDAC_UI(QMainWindow):
         self.ui.ler4vf_ch2.setText("0.0")
         self.ui.ler4vi_ch3.setText("0.0")
         self.ui.ler4vf_ch3.setText("0.0")
+        #RAR4NB Related Widgets
+        self.ui.buttrr4_start_2.clicked.connect(self.RAR4NBStart)
+        self.ui.ler4_steps_2.setText("10")
+        self.ui.ler4_subsamples_2.setText("5")
+        self.ui.ler4_intrv_2.setText("6")
+        self.ui.ler4_settle_2.setText("2")
+        self.ui.ler4_dwell_2.setText("0.25")
+        self.ui.ler4vi_ch0_2.setText("0.0")
+        self.ui.ler4vf_ch0_2.setText("0.0")
+        self.ui.ler4vi_ch1_2.setText("0.0")
+        self.ui.ler4vf_ch1_2.setText("0.0")
+        self.ui.ler4vi_ch2_2.setText("0.0")
+        self.ui.ler4vf_ch2_2.setText("0.0")
+        self.ui.ler4vi_ch3_2.setText("0.0")
+        self.ui.ler4vf_ch3_2.setText("0.0")
         #DCOut Related Widgets
         self.ui.buttset_ch0.clicked.connect(self.DCSetCH0)
         self.ui.buttset_ch1.clicked.connect(self.DCSetCH1)
@@ -243,6 +258,39 @@ class openDAC_UI(QMainWindow):
                 if ch0inrange and ch1inrange and ch2inrange and ch3inrange:
                     print("RAR4 Started.")
                     self.DAC.rampread4(v0,v1,v2,v3,steps,interval)
+                else:
+                    print("Error: Check Voltage Range")
+            else:
+                print("Error: User input bad. Check input fields.")
+
+        else:
+            print("Error: Check Serial Connection")
+    def RAR4NBStart(self):
+        if self.DAC.ready == True:
+            #Do some checks and run:
+            failed = 0
+            try:
+                v0 = [float(self.ui.ler4vi_ch0_2.text()),float(self.ui.ler4vf_ch0_2.text())]
+                v1 = [float(self.ui.ler4vi_ch1_2.text()),float(self.ui.ler4vf_ch1_2.text())]
+                v2 = [float(self.ui.ler4vi_ch2_2.text()),float(self.ui.ler4vf_ch2_2.text())]
+                v3 = [float(self.ui.ler4vi_ch3_2.text()),float(self.ui.ler4vf_ch3_2.text())]
+                steps = float(self.ui.ler4_steps_2.text())
+                interval = float(self.ui.ler4_intrv_2.text())
+                settle = float(self.ui.ler4_settle_2.text())
+                dwell = float(self.ui.ler4_dwell_2.text())
+                subsamples = float(self.ui.ler4_subsamples_2.text())
+                filename = float(self.ui.ler4_fname_2.text())
+                ch0inrange = v0[0] >= -10.0 and v0[0] <= 10.0 and v0[1] >= -10.0 and v0[1]  <= 10.0
+                ch1inrange = v1[0] >= -10.0 and v1[0] <= 10.0 and v1[1] >= -10.0 and v1[1] <= 10.0
+                ch2inrange = v2[0] >= -10.0 and v2[0] <= 10.0 and v2[1] >= -10.0 and v2[1] <= 10.0
+                ch3inrange = v3[0] >= -10.0 and v3[0] <= 10.0 and v3[1] >= -10.0 and v3[1] <= 10.0
+            except ValueError:
+                print("Error: Issue with values given.")
+                failed = 1
+            if failed == 0:
+                if ch0inrange and ch1inrange and ch2inrange and ch3inrange:
+                    print("RAR4 Started.")
+                    self.DAC.rampread4NB(v0,v1,v2,v3,steps,subsamples,interval,settle,dwell,filename)
                 else:
                     print("Error: Check Voltage Range")
             else:

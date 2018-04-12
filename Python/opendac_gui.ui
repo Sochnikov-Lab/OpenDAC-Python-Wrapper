@@ -90,7 +90,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>
@@ -496,7 +496,7 @@
         </rect>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start a linear voltage ramp on an output while reading voltages on an input.&lt;br/&gt;Note: For any ramp that you don't need data, you can simply ignore saving it.&lt;br/&gt;&lt;br/&gt;NON BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start a linear voltage ramp on an output while reading voltages on an input.&lt;br/&gt;Note: For any ramp that you don't need data, you can simply ignore saving it.&lt;br/&gt;&lt;/p&gt;&lt;p&gt;BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>START</string>
@@ -739,11 +739,11 @@
          <x>10</x>
          <y>10</y>
          <width>181</width>
-         <height>41</height>
+         <height>31</height>
         </rect>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start linear voltage ramps on all outputs while reading voltages on all inputs.&lt;br/&gt;Note: For any ramp that you don't need data, you can simply ignore saving it.&lt;br/&gt;&lt;br/&gt;NON BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start linear voltage ramps on all outputs while reading voltages on all inputs.&lt;br/&gt;Note: For any ramp that you don't need data, you can simply ignore saving it.&lt;br/&gt;&lt;br/&gt;BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>START</string>
@@ -764,12 +764,18 @@
           <property name="toolTip">
            <string>Initial Voltage Ch3</string>
           </property>
+          <property name="text">
+           <string>0</string>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
          <widget class="QLineEdit" name="ler4vi_ch1">
           <property name="toolTip">
            <string>Initial Voltage Ch1</string>
+          </property>
+          <property name="text">
+           <string>0</string>
           </property>
          </widget>
         </item>
@@ -778,12 +784,18 @@
           <property name="toolTip">
            <string>Initial Voltage Ch2</string>
           </property>
+          <property name="text">
+           <string>0</string>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
          <widget class="QLineEdit" name="ler4vf_ch1">
           <property name="toolTip">
            <string>Final Voltage Ch1</string>
+          </property>
+          <property name="text">
+           <string>0</string>
           </property>
          </widget>
         </item>
@@ -792,6 +804,9 @@
           <property name="toolTip">
            <string>Final Voltage Ch2</string>
           </property>
+          <property name="text">
+           <string>0</string>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -799,12 +814,18 @@
           <property name="toolTip">
            <string>Final Voltage Ch0</string>
           </property>
+          <property name="text">
+           <string>0</string>
+          </property>
          </widget>
         </item>
         <item row="4" column="2">
          <widget class="QLineEdit" name="ler4vf_ch3">
           <property name="toolTip">
            <string>Final Voltage Ch3</string>
+          </property>
+          <property name="text">
+           <string>0</string>
           </property>
          </widget>
         </item>
@@ -830,6 +851,9 @@
          <widget class="QLineEdit" name="ler4vi_ch0">
           <property name="toolTip">
            <string>Initial Voltage Ch0</string>
+          </property>
+          <property name="text">
+           <string>0</string>
           </property>
          </widget>
         </item>
@@ -901,7 +925,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>100</y>
+         <y>50</y>
          <width>181</width>
          <height>62</height>
         </rect>
@@ -931,7 +955,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Steps</string>
+           <string>DAC Steps</string>
           </property>
          </widget>
         </item>
@@ -970,6 +994,361 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>RR4NB</string>
+      </attribute>
+      <widget class="QWidget" name="gridLayoutWidget_10">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>10</y>
+         <width>181</width>
+         <height>153</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_10">
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="ler4vi_ch3_2">
+          <property name="toolTip">
+           <string>Initial Voltage Ch3</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="ler4vi_ch1_2">
+          <property name="toolTip">
+           <string>Initial Voltage Ch1</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="ler4vi_ch2_2">
+          <property name="toolTip">
+           <string>Initial Voltage Ch2</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLineEdit" name="ler4vf_ch1_2">
+          <property name="toolTip">
+           <string>Final Voltage Ch1</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLineEdit" name="ler4vf_ch2_2">
+          <property name="toolTip">
+           <string>Final Voltage Ch2</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="ler4vf_ch0_2">
+          <property name="toolTip">
+           <string>Final Voltage Ch0</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLineEdit" name="ler4vf_ch3_2">
+          <property name="toolTip">
+           <string>Final Voltage Ch3</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_29">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+            <underline>false</underline>
+            <kerning>true</kerning>
+           </font>
+          </property>
+          <property name="text">
+           <string>Vi</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="ler4vi_ch0_2">
+          <property name="toolTip">
+           <string>Initial Voltage Ch0</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_14">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Ch</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_30">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+            <underline>false</underline>
+            <kerning>true</kerning>
+           </font>
+          </property>
+          <property name="text">
+           <string>Vf</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_33">
+          <property name="text">
+           <string>CH0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_37">
+          <property name="text">
+           <string>CH1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_39">
+          <property name="text">
+           <string>CH2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_41">
+          <property name="text">
+           <string>CH3</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="buttrr4_start_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>181</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start linear voltage ramps on all outputs while reading voltages on all inputs.&lt;br/&gt;Note: Designed for slower, longer acquisitions/ramps. Sends values immediately after collecting to the PC to handle. Can be used as 4CH Acquisition if DAC values are constant.&lt;br/&gt;&lt;br/&gt;NON BUFFERED. Saves to file as it records.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>START LOGGING</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="gridLayoutWidget_11">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>181</width>
+         <height>161</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_11">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_48">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>DAC Steps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="ler4_steps_2">
+          <property name="toolTip">
+           <string>Number of steps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="ler4_intrv_2">
+          <property name="toolTip">
+           <string>Time between steps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_45">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Interval   (s)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_52">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Dwell (s)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="ler4_dwell_2">
+          <property name="toolTip">
+           <string>Time between steps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_51">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Settle (s)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="ler4_settle_2">
+          <property name="toolTip">
+           <string>Time between steps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="ler4_subsamples_2">
+          <property name="toolTip">
+           <string>Time between steps</string>
+          </property>
+          <property name="text">
+           <string>5</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_49">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Subsamples</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QLineEdit" name="le4_fname_2">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>170</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>rar4.txt</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>170</y>
+         <width>71</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="midLineWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string>LogName:</string>
+       </property>
+       <property name="indent">
+        <number>0</number>
        </property>
       </widget>
      </widget>
@@ -1055,7 +1434,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>
@@ -1225,40 +1604,88 @@
          </widget>
         </item>
         <item row="3" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch2"/>
+         <widget class="QLineEdit" name="lesin_amp_ch2">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch1"/>
+         <widget class="QLineEdit" name="lesin_amp_ch1">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch0"/>
+         <widget class="QLineEdit" name="lesin_amp_ch0">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="4" column="2">
-         <widget class="QLineEdit" name="lesin_amp_ch3"/>
+         <widget class="QLineEdit" name="lesin_amp_ch3">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch1"/>
+         <widget class="QLineEdit" name="lesin_freq_ch1">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch0"/>
+         <widget class="QLineEdit" name="lesin_freq_ch0">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="4" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch3"/>
+         <widget class="QLineEdit" name="lesin_freq_ch3">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="3">
-         <widget class="QLineEdit" name="lesin_freq_ch2"/>
+         <widget class="QLineEdit" name="lesin_freq_ch2">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch0"/>
+         <widget class="QLineEdit" name="lesin_phi_ch0">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch2"/>
+         <widget class="QLineEdit" name="lesin_phi_ch2">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="4" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch3"/>
+         <widget class="QLineEdit" name="lesin_phi_ch3">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="4">
-         <widget class="QLineEdit" name="lesin_phi_ch1"/>
+         <widget class="QLineEdit" name="lesin_phi_ch1">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_9">
@@ -1278,16 +1705,32 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch0"/>
+         <widget class="QLineEdit" name="lesin_off_ch0">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch1"/>
+         <widget class="QLineEdit" name="lesin_off_ch1">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch2"/>
+         <widget class="QLineEdit" name="lesin_off_ch2">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QLineEdit" name="lesin_off_ch3"/>
+         <widget class="QLineEdit" name="lesin_off_ch3">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_24">
@@ -1341,6 +1784,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="buttsin_start">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Starts SINE output on all four channels. Known issue: 120us offset between each channel.&lt;br/&gt;&lt;br/&gt;Set VDC to DC value and V0 to 0V if you want DC values!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>START</string>
           </property>
