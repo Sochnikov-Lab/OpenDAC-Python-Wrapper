@@ -28,7 +28,7 @@ class openDAC_UI(QMainWindow):
         #Serial Related Widgets
         self.ui.buttsp_conn.clicked.connect(self.serialConnect)
         self.ui.buttsp_disconn.clicked.connect(self.serialDisconnect)
-        self.ui.coboxsp_prt.addItems(["COM1","COM2","COM3","COM4","COM5","COM6","COM7","COM8","COM9","COM10","/dev/ttyACM0","/dev/ttyACM1","/dev/ttyACM2","/dev/ttyS0","/dev/ttyS1","/dev/ttyS2"])
+        self.ui.coboxsp_prt.addItems(["/dev/ttyACM0","/dev/ttyACM1","/dev/ttyACM2","/dev/ttyS0","/dev/ttyS1","/dev/ttyS2","COM1","COM2","COM3","COM4","COM5","COM6","COM7","COM8","COM9","COM10"])
         #ACQ1 Related Widgets
         self.ui.butta1_start.clicked.connect(self.ACQ1Start)
         self.ui.lea1_samples.setText("20000")
@@ -89,7 +89,7 @@ class openDAC_UI(QMainWindow):
         #SineOut Related Widgets
         self.ui.buttsin_start.clicked.connect(self.SineOut)
         #DataOut Related Widgets
-        self.ui.leout_fname.setText("data")
+        self.ui.leout_fname.setText("ttdata.csv")
         self.ui.butts_csv.clicked.connect(self.DataOut_CSV)
     def serialConnect(self):#Evt Handler for serial connect button
         port = self.ui.coboxsp_prt.currentText()
@@ -418,7 +418,7 @@ class openDAC_UI(QMainWindow):
         else:
             print("Error: Check Serial Connection")
     def DataOut_CSV(self):
-        filename = self.ui.leout_fname.text() + "_tt.csv"
+        filename = self.ui.leout_fname.text()
         self.DAC.saveToFile(filename)
         #print("CSV file saved: " + filename)
 
