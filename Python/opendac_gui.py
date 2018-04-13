@@ -274,12 +274,12 @@ class openDAC_UI(QMainWindow):
                 v1 = [float(self.ui.ler4vi_ch1_2.text()),float(self.ui.ler4vf_ch1_2.text())]
                 v2 = [float(self.ui.ler4vi_ch2_2.text()),float(self.ui.ler4vf_ch2_2.text())]
                 v3 = [float(self.ui.ler4vi_ch3_2.text()),float(self.ui.ler4vf_ch3_2.text())]
-                steps = float(self.ui.ler4_steps_2.text())
+                steps = int(self.ui.ler4_steps_2.text())
                 interval = float(self.ui.ler4_intrv_2.text())
                 settle = float(self.ui.ler4_settle_2.text())
                 dwell = float(self.ui.ler4_dwell_2.text())
-                subsamples = float(self.ui.ler4_subsamples_2.text())
-                filename = float(self.ui.ler4_fname_2.text())
+                subsamples = int(self.ui.ler4_subsamples_2.text())
+                filename = str(self.ui.ler4_fname_2.text())
                 ch0inrange = v0[0] >= -10.0 and v0[0] <= 10.0 and v0[1] >= -10.0 and v0[1]  <= 10.0
                 ch1inrange = v1[0] >= -10.0 and v1[0] <= 10.0 and v1[1] >= -10.0 and v1[1] <= 10.0
                 ch2inrange = v2[0] >= -10.0 and v2[0] <= 10.0 and v2[1] >= -10.0 and v2[1] <= 10.0

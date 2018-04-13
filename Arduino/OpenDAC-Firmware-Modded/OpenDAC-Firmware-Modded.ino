@@ -806,12 +806,12 @@ void RAR(std::vector<String> DB,int nCh)
     for (int j = 0; j < nSteps; j++)
     {
       int timer = micros();
-      digitalWrite(data, HIGH);
+      //digitalWrite(data, HIGH);
       writeDAC(0, vi[0] + (vf[0] - vi[0])*j / (nSteps - 1));
       writeDAC(1, vi[1] + (vf[1] - vi[1])*j / (nSteps - 1));
       writeDAC(2, vi[2] + (vf[2] - vi[2])*j / (nSteps - 1));
       writeDAC(3, vi[3] + (vf[3] - vi[3])*j / (nSteps - 1));
-      digitalWrite(data, LOW);
+      //digitalWrite(data, LOW);
       quadWriteToBuffer(bufferv,j,getSingleReading(fixMapADC(0)), getSingleReading(fixMapADC(1)), getSingleReading(fixMapADC(2)), getSingleReading(fixMapADC(3)));
       //while (micros() <= timer + (DB[6].toInt())/2); //wait half delay
       //read voltage from ADC
@@ -1037,11 +1037,11 @@ void SRAMF(std::vector<String> DB)
         break;
       }
       v = writeDAC(DB[1].toInt(), DB[2].toFloat());
-      Serial.print("DAC ");
-      Serial.print(DB[1]);
-      Serial.print(" UPDATED TO ");
-      Serial.print(v, 4);
-      Serial.println("V");
+      //Serial.print("DAC ");
+      //Serial.print(DB[1]);
+      //Serial.print(" UPDATED TO ");
+      //Serial.print(v, 4);
+      //Serial.println("V");
       break;
 
     case 2: // Read ADC

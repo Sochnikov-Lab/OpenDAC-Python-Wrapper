@@ -1309,7 +1309,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QLineEdit" name="le4_fname_2">
+      <widget class="QLineEdit" name="ler4_fname_2">
        <property name="geometry">
         <rect>
          <x>280</x>
