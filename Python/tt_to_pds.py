@@ -26,13 +26,13 @@ for i in range(1,nTraces):
     timesML.append(dataframe["time(s)"]) #list of times
     nSamples.append(len(dataframe["time(s)"]))
     if int(argchannel) == 0:
-        voltsML.append(dataframe["ch0(V)"])
+        voltsML.append(dataframe["ADC ch0(V)"])
     if int(argchannel) == 1:
-        voltsML.append(dataframe["ch1(V)"])
+        voltsML.append(dataframe["ADC ch1(V)"])
     if int(argchannel) == 2:
-        voltsML.append(dataframe["ch2(V)"])
+        voltsML.append(dataframe["ADC ch2(V)"])
     if int(argchannel) == 3:
-        voltsML.append(dataframe["ch3(V)"])
+        voltsML.append(dataframe["ADC ch3(V)"])
 
 if min(nSamples) != max(nSamples):
     print "ERROR: Datasets do not have same length!"
@@ -91,7 +91,7 @@ frequencies = np.fft.fftfreq(nSamples[0],d=timeStep)
 
 #print fdata
 
-
+print("tt_to_pds.py executed:")
 print("Number of Time Traces to Average: " + str(len(fftTempML)))
 print("Length of x: " + str(len(frequencies)))
 print("Length of y: " + str(len(spect)))
@@ -100,16 +100,26 @@ print("Length of y: " + str(len(spect)))
 pltfig = plt.figure()
 ax = plt.gca()
 #ax.scatter(times,ch0V, c='r', label="50 $\Omega$ Termination")
-ax.plot(frequencies,spect, c='b', label="Sine Wave",linewidth=1.0)
+ax.plot(frequencies,spect, c='b', label="Capture",linewidth=1.0)
 ax.set_xlim([0.1,100000])
 ax.set_ylim([0.0000000000000001,10])
-ax.set_title("PDS Test")
+ax.set_title("PDS")
 ax.set_xlabel("frequencies (Hz)")
 ax.set_ylabel("Spectral Power (A.U.)")
 ax.set_xscale("log")
 ax.set_yscale("log")
 
 ax.legend()
-print frequencies
 plt.show()
-pltfig.savefig('figdata_pds.png')
+
+#Fileoutput:
+"""
+pltfig.savefig('data/pds_out.png')
+
+#output CSV file containing PDS
+pdsoutcsv = open("data/pds_out.csv","w")
+pdsoutcsv.write("frequency,specpower")
+for row in range(0,len(spect)):
+    pdsoutcsv.write(str(frequencies[row]) + ","  + str(spect[row]) + "\n")
+pdsoutcsv.close()
+"""

@@ -10,6 +10,7 @@ import serial
 import io
 from math import floor
 import time
+import os
 
 #DAC-ADC Controller Class
 class ODAC(object):
@@ -230,11 +231,11 @@ class ODAC(object):
         if interval-subsamples*dwell-settle >= 0:
             self.adc1rec = -1 #-1 = nothing in hardware buffer to read out. This is read out into sep file!
             voltagestep = [(v0[1]-v0[0])/(steps-1),(v1[1]-v1[0])/(steps-1),(v2[1]-v2[0])/(steps-1),(v3[1]-v3[0])/(steps-1)]
-            datafile = open(filename,'a')
+            datafile = open("data/" + filename,'a')
             datafile.write("time,DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             datafile.close()
             for step in range(0,steps):
-                print("Step " + str(step) + " of " + str(steps) + ".")
+                print("Step " + str(step + 1) + " of " + str(steps) + ".")
                 #Set DAC voltages for this step:
                 self.setDAC(0,v0[0]+step*voltagestep[0])
                 self.setDAC(1,v1[0]+step*voltagestep[1])
@@ -250,14 +251,14 @@ class ODAC(object):
                 #sub sample loop:
                 for subsample in range(0,subsamples):
                     #Record timestamp
-                    timestamp = time.strftime("%d-%m-%y,%H:%M:%S") #Find a way to get milliseconds too
+                    timestamp = time.strftime('"%d-%m-%y,%H:%M:%S"') #Find a way to get milliseconds too
                     #Read ADC and save values:
                     adcv0 = self.getADC(0)
                     adcv1 = self.getADC(1)
                     adcv2 = self.getADC(2)
                     adcv3 = self.getADC(3)
                     #save to file:
-                    with open(filename,'a') as datafile:
+                    with open("data/" + filename,'a') as datafile:
                         datafile.write(str(timestamp) + "," + str(dacv0) + "," + str(dacv1) + "," + str(dacv2) + "," + str(dacv3) + "," + str(adcv0) + "," + str(adcv1) + "," + str(adcv2) + "," + str(adcv3) + "\n\r")
                     time.sleep(dwell)
                 time.sleep(interval-subsamples*dwell-settle) #Unknown contribution from saving left out
@@ -276,28 +277,71 @@ class ODAC(object):
     def sine4(self,v00,v01,v02,v03,angfreq0,angfreq1,angfreq2,angfreq3,phase0,phase1,phase2,phase3,offset0,offset1,offset2,offset3,interval):
         commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))
-    def acquireOne(self,adc,nSteps,stepSize):
-        #setup and flags:
-        self.clearBuffers()
-        self.adc1rec = adc
-        print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
-        #Send command over serial port:
-        self.serIO.flush()
-        self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n')) #Send command
-        self.serIO.flush()
-        #Read acquisition data:
-        self.ser.timeout = nSteps*stepSize+5.0
-        adcbuffer_full_str = str(self.serIO.read(nSteps*13)) #Full buffer string
-        self.ser.timeout = 0.25 #return to default timeout
-        #Decompose full list string to rows:
-        adcbuffer_row_str = adcbuffer_full_str.split("\n")
-        #convert list into list of values:
-        for i in range(0,nSteps):
-            self.adctimes.append(i*stepSize)
-            self.adcbuffer.append(float(adcbuffer_row_str[i]))
-        #cleanup:
-        del adcbuffer_full_str
-        del adcbuffer_row_str
+    def acquireOne(self,adc,nSteps,stepSize,runs,filename_base):
+
+        for run in range(0,runs):
+            #setup and flags:
+            self.clearBuffers()
+            self.adc1rec = adc
+            print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
+            #Send command over serial port:
+            self.serIO.flush()
+            self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n')) #Send command
+            self.serIO.flush()
+            #Read acquisition data:
+            self.ser.timeout = nSteps*stepSize+5.0
+            adcbuffer_full_str = str(self.serIO.read(nSteps*13)) #Full buffer string
+            self.ser.timeout = 0.25 #return to default timeout
+            #Decompose full list string to rows:
+            adcbuffer_row_str = adcbuffer_full_str.split("\n")
+            #convert list into list of values:
+            for i in range(0,nSteps):
+                self.adctimes.append(i*stepSize)
+                self.adcbuffer.append(float(adcbuffer_row_str[i]))
+            #cleanup:
+            del adcbuffer_full_str
+            del adcbuffer_row_str
+
+
+            #Save to File:
+            filename = "data/" + filename_base + "_%03d.csv" % run
+            #Check sizes of buffers, determine what chs are recorded:
+            if self.adc1rec == 0:    #CH0 recorded
+                #datastructure:
+                #time,ch0,ch1,ch2,ch3"
+                print("Saved CH0 to file")
+                datafile = open(filename,'w')
+                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                for i in range(0,len(self.adctimes)):
+                    datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer[i]) +",,,\n")
+                datafile.close()
+            if self.adc1rec == 1:#CH1 recorded
+                #datastructure:
+                #time,ch0,ch1,ch2,ch3"
+                print("Saved CH1 to file")
+                datafile = open(filename,'w')
+                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                for i in range(0,len(self.adctimes)):
+                    datafile.write(str(self.adctimes[i]) + ",," + str(self.adcbuffer[i]) +",,\n")
+                datafile.close()
+            if self.adc1rec == 2:#CH2 recorded
+                #datastructure:
+                #time,ch0,ch1,ch2,ch3"
+                print("Saved CH2 to file")
+                datafile = open(filename,'w')
+                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                for i in range(0,len(self.adctimes)):
+                    datafile.write(str(self.adctimes[i]) + ",,," + str(self.adcbuffer[i]) +",\n")
+                datafile.close()
+            if self.adc1rec == 3:#CH3 recorded
+                #datastructure:
+                #time,ch0,ch1,ch2,ch3"
+                print("Saved CH3 to file")
+                datafile = open(filename,'w')
+                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                for i in range(0,len(self.adctimes)):
+                    datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
+                datafile.close()
     def acquireTwo(self,adcA,adcB,nSteps,stepSize):
         #setup and flags:
         self.clearBuffers()
@@ -463,3 +507,13 @@ class ODAC(object):
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
             datafile.close()
+    def viewPDS(self,channel,gain,runs,filename_base):
+
+        #Construct execution string:
+        commandstr =  "python tt_to_pds.py " + str(channel) + " " + str(gain) + " "
+        #print commandstr
+        for run in range(0,runs):
+            commandstr = commandstr + "data/" + filename_base + "_%03d.csv" % run + " "
+
+        #run tt_to_pds.py:
+        os.system(commandstr)

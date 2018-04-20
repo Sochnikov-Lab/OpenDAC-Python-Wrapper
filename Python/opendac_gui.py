@@ -33,6 +33,7 @@ class openDAC_UI(QMainWindow):
         self.ui.butta1_start.clicked.connect(self.ACQ1Start)
         self.ui.lea1_samples.setText("20000")
         self.ui.lea1_srate.setText("2000")
+        self.ui.butta1_viewpds.clicked.connect(self.ViewPDSButton)
         #ACQ2 Related Widgets
         self.ui.butta2_start.clicked.connect(self.ACQ2Start)
         self.ui.lea2_samples.setText("10000")
@@ -113,6 +114,8 @@ class openDAC_UI(QMainWindow):
     def ACQ1Start(self):
         failed = 0
         try: #check for value error (unexepected datatype)
+            filename_base = str(self.ui.lea1_fname.text())
+            runs = int(self.ui.lea1_runs.text())
             samples = int(self.ui.lea1_samples.text())
             stepsize = 1.0/float(self.ui.lea1_srate.text())
         except ValueError:
@@ -123,16 +126,16 @@ class openDAC_UI(QMainWindow):
                 if self.DAC.ready == True:
                     if self.ui.rba1_ch0.isChecked(): #Ch0 radiobutton selected
                         print("CH0 Selected.")
-                        self.DAC.acquireOne(0,samples,stepsize)
+                        self.DAC.acquireOne(0,samples,stepsize,runs,filename_base)
                     if self.ui.rba1_ch1.isChecked():#Ch1 radiobutton selected
                         print("CH1 Selected.")
-                        self.DAC.acquireOne(1,samples,stepsize)
+                        self.DAC.acquireOne(1,samples,stepsize,runs,filename_base)
                     if self.ui.rba1_ch2.isChecked():#Ch2 radiobutton selected
                         print("CH2 Selected.")
-                        self.DAC.acquireOne(2,samples,stepsize)
+                        self.DAC.acquireOne(2,samples,stepsize,runs,filename_base)
                     if self.ui.rba1_ch3.isChecked():#Ch3 radiobutton selected
                         print("CH3 Selected.")
-                        self.DAC.acquireOne(3,samples,stepsize)
+                        self.DAC.acquireOne(3,samples,stepsize,runs,filename_base)
                 else:
                     print("Error: Check Serial Connection")
             else:
@@ -421,6 +424,22 @@ class openDAC_UI(QMainWindow):
         filename = self.ui.leout_fname.text()
         self.DAC.saveToFile(filename)
         #print("CSV file saved: " + filename)
+    def ViewPDSButton(self):
+        #Which channel to view in the CSV file(s):
+        if self.ui.rba1_ch0.isChecked(): #Ch0 radiobutton selected
+            channel = 0
+        if self.ui.rba1_ch1.isChecked():#Ch1 radiobutton selected
+            channel = 1
+        if self.ui.rba1_ch2.isChecked():#Ch2 radiobutton selected
+            channel = 2
+        if self.ui.rba1_ch3.isChecked():#Ch3 radiobutton selected
+            channel = 3
+        #Gain assumed to be 1. Maybe add this feature later?
+        gain = 1
+        filename_base = str(self.ui.lea1_fname.text())
+        runs = int(self.ui.lea1_runs.text())
+
+        self.DAC.viewPDS(channel,gain,runs,filename_base)
 
 #GUI Initialization
 myODAC = ODAC()

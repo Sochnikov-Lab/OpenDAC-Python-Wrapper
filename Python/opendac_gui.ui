@@ -72,7 +72,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
+       <y>40</y>
        <width>391</width>
        <height>241</height>
       </rect>
@@ -90,14 +90,14 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>5</number>
+      <number>0</number>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>
      </property>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
-       <string>A1</string>
+       <string>A1/PDS</string>
       </attribute>
       <widget class="QWidget" name="gridLayoutWidget">
        <property name="geometry">
@@ -127,12 +127,18 @@
           <property name="toolTip">
            <string>Hardware limit: 20000</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="lea1_srate">
           <property name="toolTip">
            <string>Hardware &quot;limit&quot;: 2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -156,8 +162,8 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>371</width>
-         <height>41</height>
+         <width>101</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="toolTip">
@@ -223,6 +229,71 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="gridLayoutWidget_12">
+       <property name="geometry">
+        <rect>
+         <x>119</x>
+         <y>10</y>
+         <width>261</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_12">
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lea1_fname">
+          <property name="toolTip">
+           <string>Saves to &quot;data/[filedescription]_###.csv&quot; Make sure &quot;data&quot; folder exists!</string>
+          </property>
+          <property name="text">
+           <string>acqrun</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lea1_runs">
+          <property name="toolTip">
+           <string>Hardware limit: 20000</string>
+          </property>
+          <property name="text">
+           <string>1</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_50">
+          <property name="text">
+           <string>Description:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_53">
+          <property name="text">
+           <string>Runs:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="butta1_viewpds">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start acquiring voltage data on a single channel.&lt;br/&gt;&lt;/p&gt;&lt;p&gt;HARDWARE BUFFERED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>View PDS</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab_10">
       <attribute name="title">
@@ -256,12 +327,18 @@
           <property name="toolTip">
            <string>Hardware limit: 10000</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="lea2_srate">
           <property name="toolTip">
            <string>Hardware &quot;limit&quot;: 2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -457,12 +534,18 @@
           <property name="toolTip">
            <string>Hardware limit: 5000</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="lea4_srate">
           <property name="toolTip">
            <string>Hardware &quot;limit&quot;: 2kHz</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -647,12 +730,18 @@
           <property name="toolTip">
            <string>Initial DAC voltage</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="ler1vf">
           <property name="toolTip">
            <string>Final DAC voltage</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -717,12 +806,18 @@
           <property name="toolTip">
            <string>Number of steps</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="ler1_intrv">
           <property name="toolTip">
            <string>Time between steps</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -767,6 +862,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
@@ -776,6 +874,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -787,6 +888,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
@@ -796,6 +900,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -807,6 +914,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -817,6 +927,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="4" column="2">
@@ -826,6 +939,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -854,6 +970,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -964,12 +1083,18 @@
           <property name="toolTip">
            <string>Number of steps</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="ler4_intrv">
           <property name="toolTip">
            <string>Time between steps</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1019,6 +1144,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
@@ -1028,6 +1156,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1039,6 +1170,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
@@ -1048,6 +1182,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1059,6 +1196,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -1069,6 +1209,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="4" column="2">
@@ -1078,6 +1221,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1106,6 +1252,9 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1218,12 +1367,18 @@
           <property name="toolTip">
            <string>Number of steps</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
          <widget class="QLineEdit" name="ler4_intrv_2">
           <property name="toolTip">
            <string>Time between steps</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1260,6 +1415,9 @@
           <property name="toolTip">
            <string>Time between steps</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="3" column="0">
@@ -1281,6 +1439,9 @@
           <property name="toolTip">
            <string>Time between steps</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
@@ -1290,6 +1451,9 @@
           </property>
           <property name="text">
            <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1434,7 +1598,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>
@@ -1461,12 +1625,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="0" column="1">
          <widget class="QLineEdit" name="leset_ch0">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1489,6 +1659,9 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -1502,6 +1675,9 @@
          <widget class="QLineEdit" name="leset_ch2">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1624,12 +1800,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="2">
          <widget class="QLineEdit" name="lesin_amp_ch1">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1638,12 +1820,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="4" column="2">
          <widget class="QLineEdit" name="lesin_amp_ch3">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1652,12 +1840,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="3">
          <widget class="QLineEdit" name="lesin_freq_ch0">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1666,12 +1860,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="3" column="3">
          <widget class="QLineEdit" name="lesin_freq_ch2">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1680,12 +1880,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="3" column="4">
          <widget class="QLineEdit" name="lesin_phi_ch2">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1694,12 +1900,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="4">
          <widget class="QLineEdit" name="lesin_phi_ch1">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1725,12 +1937,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
          <widget class="QLineEdit" name="lesin_off_ch1">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1739,12 +1957,18 @@
           <property name="text">
            <string>0</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
          </widget>
         </item>
         <item row="4" column="1">
          <widget class="QLineEdit" name="lesin_off_ch3">
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1796,7 +2020,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lesin_duration"/>
+         <widget class="QLineEdit" name="lesin_duration">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="buttsin_start">
@@ -1878,6 +2106,9 @@
         <property name="text">
          <string>115200</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -1910,19 +2141,6 @@
        </widget>
       </item>
      </layout>
-    </widget>
-    <widget class="QPushButton" name="aboutButton">
-     <property name="geometry">
-      <rect>
-       <x>760</x>
-       <y>30</y>
-       <width>71</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>About</string>
-     </property>
     </widget>
    </widget>
   </widget>
