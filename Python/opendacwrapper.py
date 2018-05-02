@@ -189,7 +189,17 @@ class ODAC(object):
         #cleanup:
         del adcbufferstr
         del adcbufferrowstr
-    def rampread4(self,v0,v1,v2,v3,steps,interval):
+
+        #save:
+        #datastructure:
+        #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
+        fullfname = "data/" + filename
+        datafile = open(fullfname,'w')
+        datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+        for i in range(0,len(self.adctimes)):
+            datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+        datafile.close()
+    def rampread4(self,v0,v1,v2,v3,steps,interval,filename):
         #setup and flags:
         self.clearBuffers()
         self.adc1rec = -4 #-4 = rampread1 or rampread4
@@ -224,6 +234,16 @@ class ODAC(object):
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
+
+        #save:
+        #datastructure:
+        #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
+        fullfname = "data/" + filename
+        datafile = open(fullfname,'w')
+        datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+        for i in range(0,len(self.adctimes)):
+            datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+        datafile.close()
     def rampread4NB(self,v0,v1,v2,v3,steps,subsamples,interval,settle,dwell,filename):
         #setup and flags:
         self.clearBuffers()
@@ -278,7 +298,6 @@ class ODAC(object):
         commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))
     def acquireOne(self,adc,nSteps,stepSize,runs,filename_base):
-
         for run in range(0,runs):
             #setup and flags:
             self.clearBuffers()
@@ -315,7 +334,6 @@ class ODAC(object):
             if self.adc1rec == 0:    #CH0 recorded
                 #datastructure:
                 #time,ch0,ch1,ch2,ch3"
-                print("Saved CH0 to file")
                 datafile = open(filename,'w')
                 datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
                 for i in range(0,len(self.adctimes)):
@@ -324,7 +342,6 @@ class ODAC(object):
             if self.adc1rec == 1:#CH1 recorded
                 #datastructure:
                 #time,ch0,ch1,ch2,ch3"
-                print("Saved CH1 to file")
                 datafile = open(filename,'w')
                 datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
                 for i in range(0,len(self.adctimes)):
@@ -333,7 +350,6 @@ class ODAC(object):
             if self.adc1rec == 2:#CH2 recorded
                 #datastructure:
                 #time,ch0,ch1,ch2,ch3"
-                print("Saved CH2 to file")
                 datafile = open(filename,'w')
                 datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
                 for i in range(0,len(self.adctimes)):
@@ -342,13 +358,12 @@ class ODAC(object):
             if self.adc1rec == 3:#CH3 recorded
                 #datastructure:
                 #time,ch0,ch1,ch2,ch3"
-                print("Saved CH3 to file")
                 datafile = open(filename,'w')
                 datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
                 for i in range(0,len(self.adctimes)):
                     datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
                 datafile.close()
-    def acquireTwo(self,adcA,adcB,nSteps,stepSize):
+    def acquireTwo(self,adcA,adcB,nSteps,stepSize,filename):
         #setup and flags:
         self.clearBuffers()
         self.adc1rec = - 3
@@ -414,9 +429,19 @@ class ODAC(object):
             if len(self.adcbuffer3) == 0:
                 for step in range(0,nSteps-2):
                     self.adcbuffer3.append('')
+
+            #Save:
+            #datastructure:
+            #time,ch0,ch1,ch2,ch3"
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
+            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+            datafile.close()
         else:
             print("ODAC Error: Duplicate adc channel selected. Canceled acquisition.")
-    def acquireAll(self,nSteps,stepSize):
+    def acquireAll(self,nSteps,stepSize,filename):
         self.clearBuffers()
         self.adc1rec = - 2
         commandstr = 'ACQA,' + str(nSteps) + ',' + str(stepSize) + '\n'
@@ -438,6 +463,17 @@ class ODAC(object):
             self.adcbuffer3.append(float(adcbuffer_row_str[step].split(',')[3]))
             #Append times:
             self.adctimes.append(step*stepSize)
+
+        #Save:
+        #datastructure:
+        #time,ch0,ch1,ch2,ch3"
+        fullfname = "data/" + filename
+        datafile = open(fullfname,'w')
+        datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+        for i in range(0,len(self.adctimes)):
+            datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+        datafile.close()
+    """ Deprecated
     def saveToFile(self,filename):
         #Check sizes of buffers, determine what chs are recorded:
         if self.adc1rec == 0:    #CH0 recorded
@@ -505,7 +541,6 @@ class ODAC(object):
         if self.adc1rec == -4:#Ramp and Read 1 or 4
             #datastructure:
             #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
-            print("Saved Ramp and Read CH0 to file")
             fullfname = "data/" + filename
             datafile = open(fullfname,'w')
             datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
@@ -520,6 +555,7 @@ class ODAC(object):
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
             datafile.close()
+    """
     def viewPDS(self,channel,gain,runs,filename_base):
 
         #Construct execution string:

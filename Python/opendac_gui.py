@@ -120,7 +120,8 @@ class openDAC_UI(QMainWindow):
             stepsize = 1.0/float(self.ui.lea1_srate.text())
         except ValueError:
             print("Error: Issue with values given.")
-            failed = 1
+            failed = 1        print("Saved CH0-CH3 to file")
+
         if failed == 0:
             if samples <= 20000 and stepsize >= 1.0/2000.0: #Make sure hardware limits are respected
                 if self.DAC.ready == True:
@@ -147,6 +148,7 @@ class openDAC_UI(QMainWindow):
         try:
             samples = int(self.ui.lea2_samples.text())
             stepSize = 1.0/float(self.ui.lea2_srate.text())
+            filename = lea2_fname.text()
         except ValueError:
             print("Error: Issue with values given.")
             failed = 1
@@ -171,7 +173,7 @@ class openDAC_UI(QMainWindow):
                             adcB = 2
                         if self.ui.rba2_ch3B.isChecked():
                             adcB = 3
-                        self.DAC.acquireTwo(adcA,adcB,samples,stepSize)
+                        self.DAC.acquireTwo(adcA,adcB,samples,stepSize,filename)
                     else:
                         print("Error: Incorrect Channel Selection.")
                 else:
@@ -186,12 +188,13 @@ class openDAC_UI(QMainWindow):
             try:
                 samples = int(self.ui.lea4_samples.text())
                 stepsize = 1.0/float(self.ui.lea4_srate.text())
+                filename = lea4_fname.text()
             except ValueError:
                 print("Error: Issue with values given.")
                 failed = 1
             if failed == 0:
                 if samples <= 5000 and stepsize >= 1.0/2000.0:    #Ramp1 Event Handlers
-                    self.DAC.acquireAll(samples,stepsize)
+                    self.DAC.acquireAll(samples,stepsize,filename)
                 else:
                     print("Acquire Halted: too many samples (max 5000) or sample rate too fast (max 2kHz)")
             else:
@@ -226,12 +229,13 @@ class openDAC_UI(QMainWindow):
                 v2 = float(self.ui.ler1vf.text())
                 steps = float(self.ui.ler1_steps.text())
                 interval = float(self.ui.ler1_intrv.text())
+                filename = ler1_fname.text()
             except ValueError:
                 print("Error: Issue with values given.")
                 failed = 1
             if failed == 0:
                 if v1 >= -10.0 and v1 <= 10.0 and v2 >= -10.0 and v2 <= 10.0:
-                    self.DAC.rampread1(adc,dac,v1,v2,steps,interval)
+                    self.DAC.rampread1(adc,dac,v1,v2,steps,interval,filename)
                 else:
                     print("Error: Check Voltage Range")
             else:
@@ -250,6 +254,7 @@ class openDAC_UI(QMainWindow):
                 v3 = [float(self.ui.ler4vi_ch3.text()),float(self.ui.ler4vf_ch3.text())]
                 steps = float(self.ui.ler4_steps.text())
                 interval = float(self.ui.ler4_intrv.text())
+                filename = ler4_fname.text()
                 ch0inrange = v0[0] >= -10.0 and v0[0] <= 10.0 and v0[1] >= -10.0 and v0[1]  <= 10.0
                 ch1inrange = v1[0] >= -10.0 and v1[0] <= 10.0 and v1[1] >= -10.0 and v1[1] <= 10.0
                 ch2inrange = v2[0] >= -10.0 and v2[0] <= 10.0 and v2[1] >= -10.0 and v2[1] <= 10.0
@@ -260,7 +265,7 @@ class openDAC_UI(QMainWindow):
             if failed == 0:
                 if ch0inrange and ch1inrange and ch2inrange and ch3inrange:
                     print("RAR4 Started.")
-                    self.DAC.rampread4(v0,v1,v2,v3,steps,interval)
+                    self.DAC.rampread4(v0,v1,v2,v3,steps,interval,filename)
                 else:
                     print("Error: Check Voltage Range")
             else:
@@ -420,10 +425,12 @@ class openDAC_UI(QMainWindow):
                 print("User Error: Invalid Settings for Sine4 output")
         else:
             print("Error: Check Serial Connection")
+    """ Deprecated
     def DataOut_CSV(self):
         filename = self.ui.leout_fname.text()
         self.DAC.saveToFile(filename)
         #print("CSV file saved: " + filename)
+    """
     def ViewPDSButton(self):
         #Which channel to view in the CSV file(s):
         if self.ui.rba1_ch0.isChecked(): #Ch0 radiobutton selected
