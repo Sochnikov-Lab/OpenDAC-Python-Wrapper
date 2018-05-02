@@ -191,14 +191,18 @@ class ODAC(object):
         del adcbufferrowstr
 
         #save:
-        #datastructure:
-        #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
-        fullfname = "data/" + filename
-        datafile = open(fullfname,'w')
-        datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-        for i in range(0,len(self.adctimes)):
-            datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-        datafile.close()
+        try:
+            #datastructure:
+            #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
+            datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+            datafile.close()
+            print("Data Saved")
+        except IndexError:
+            print("Index Error: Data not saved")
     def rampread4(self,v0,v1,v2,v3,steps,interval,filename):
         #setup and flags:
         self.clearBuffers()
@@ -236,14 +240,18 @@ class ODAC(object):
         del adcbuffer_row_str
 
         #save:
-        #datastructure:
-        #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
-        fullfname = "data/" + filename
-        datafile = open(fullfname,'w')
-        datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-        for i in range(0,len(self.adctimes)):
-            datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-        datafile.close()
+        try:
+            #datastructure:
+            #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
+            datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+            datafile.close()
+            print("Data Saved")
+        except IndexError:
+            print("Index Error: Data not saved")
     def rampread4NB(self,v0,v1,v2,v3,steps,subsamples,interval,settle,dwell,filename):
         #setup and flags:
         self.clearBuffers()
@@ -329,40 +337,44 @@ class ODAC(object):
 
 
             #Save to File:
-            filename = "data/" + filename_base + "_%03d.csv" % run
-            #Check sizes of buffers, determine what chs are recorded:
-            if self.adc1rec == 0:    #CH0 recorded
-                #datastructure:
-                #time,ch0,ch1,ch2,ch3"
-                datafile = open(filename,'w')
-                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-                for i in range(0,len(self.adctimes)):
-                    datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer[i]) +",,,\n")
-                datafile.close()
-            if self.adc1rec == 1:#CH1 recorded
-                #datastructure:
-                #time,ch0,ch1,ch2,ch3"
-                datafile = open(filename,'w')
-                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-                for i in range(0,len(self.adctimes)):
-                    datafile.write(str(self.adctimes[i]) + ",," + str(self.adcbuffer[i]) +",,\n")
-                datafile.close()
-            if self.adc1rec == 2:#CH2 recorded
-                #datastructure:
-                #time,ch0,ch1,ch2,ch3"
-                datafile = open(filename,'w')
-                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-                for i in range(0,len(self.adctimes)):
-                    datafile.write(str(self.adctimes[i]) + ",,," + str(self.adcbuffer[i]) +",\n")
-                datafile.close()
-            if self.adc1rec == 3:#CH3 recorded
-                #datastructure:
-                #time,ch0,ch1,ch2,ch3"
-                datafile = open(filename,'w')
-                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-                for i in range(0,len(self.adctimes)):
-                    datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
-                datafile.close()
+            try:
+                filename = "data/" + filename_base + "_%03d.csv" % run
+                #Check sizes of buffers, determine what chs are recorded:
+                if self.adc1rec == 0:    #CH0 recorded
+                    #datastructure:
+                    #time,ch0,ch1,ch2,ch3"
+                    datafile = open(filename,'w')
+                    datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                    for i in range(0,len(self.adctimes)):
+                        datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer[i]) +",,,\n")
+                    datafile.close()
+                if self.adc1rec == 1:#CH1 recorded
+                    #datastructure:
+                    #time,ch0,ch1,ch2,ch3"
+                    datafile = open(filename,'w')
+                    datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                    for i in range(0,len(self.adctimes)):
+                        datafile.write(str(self.adctimes[i]) + ",," + str(self.adcbuffer[i]) +",,\n")
+                    datafile.close()
+                if self.adc1rec == 2:#CH2 recorded
+                    #datastructure:
+                    #time,ch0,ch1,ch2,ch3"
+                    datafile = open(filename,'w')
+                    datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                    for i in range(0,len(self.adctimes)):
+                        datafile.write(str(self.adctimes[i]) + ",,," + str(self.adcbuffer[i]) +",\n")
+                    datafile.close()
+                if self.adc1rec == 3:#CH3 recorded
+                    #datastructure:
+                    #time,ch0,ch1,ch2,ch3"
+                    datafile = open(filename,'w')
+                    datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                    for i in range(0,len(self.adctimes)):
+                        datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
+                    datafile.close()
+                print("Data Saved")
+            except IndexError:
+                print("Index error. Data not saved.")
     def acquireTwo(self,adcA,adcB,nSteps,stepSize,filename):
         #setup and flags:
         self.clearBuffers()
@@ -431,14 +443,18 @@ class ODAC(object):
                     self.adcbuffer3.append('')
 
             #Save:
-            #datastructure:
-            #time,ch0,ch1,ch2,ch3"
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-            datafile.close()
+            try:
+                #datastructure:
+                #time,ch0,ch1,ch2,ch3"
+                fullfname = "data/" + filename
+                datafile = open(fullfname,'w')
+                datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+                for i in range(0,len(self.adctimes)):
+                    datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+                datafile.close()
+                print("Data saved.")
+            except IndexError:
+                print("Index Error: Data not saved.")
         else:
             print("ODAC Error: Duplicate adc channel selected. Canceled acquisition.")
     def acquireAll(self,nSteps,stepSize,filename):
@@ -465,14 +481,18 @@ class ODAC(object):
             self.adctimes.append(step*stepSize)
 
         #Save:
-        #datastructure:
-        #time,ch0,ch1,ch2,ch3"
-        fullfname = "data/" + filename
-        datafile = open(fullfname,'w')
-        datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-        for i in range(0,len(self.adctimes)):
-            datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-        datafile.close()
+        try:
+            #datastructure:
+            #time,ch0,ch1,ch2,ch3"
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
+            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
+            for i in range(0,len(self.adctimes)):
+                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
+            datafile.close()
+            print("Data Saved")
+        except IndexError:
+            print("Index Error: Data not saved")
     """ Deprecated
     def saveToFile(self,filename):
         #Check sizes of buffers, determine what chs are recorded:
