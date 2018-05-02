@@ -89,9 +89,7 @@ class openDAC_UI(QMainWindow):
         self.ui.leset_ch3.setText("0.0")
         #SineOut Related Widgets
         self.ui.buttsin_start.clicked.connect(self.SineOut)
-        #DataOut Related Widgets
-        self.ui.leout_fname.setText("ttdata.csv")
-        self.ui.butts_csv.clicked.connect(self.DataOut_CSV)
+
     def serialConnect(self):#Evt Handler for serial connect button
         port = self.ui.coboxsp_prt.currentText()
         baud = self.ui.lesp_baud.text()
@@ -148,7 +146,8 @@ class openDAC_UI(QMainWindow):
         try:
             samples = int(self.ui.lea2_samples.text())
             stepSize = 1.0/float(self.ui.lea2_srate.text())
-            filename = lea2_fname.text()
+            filename = lea2_f            print("Saved CH0-CH3 to file")
+name.text()
         except ValueError:
             print("Error: Issue with values given.")
             failed = 1
