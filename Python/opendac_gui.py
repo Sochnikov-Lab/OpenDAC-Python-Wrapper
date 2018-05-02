@@ -120,7 +120,7 @@ class openDAC_UI(QMainWindow):
             stepsize = 1.0/float(self.ui.lea1_srate.text())
         except ValueError:
             print("Error: Issue with values given.")
-            failed = 1        print("Saved CH0-CH3 to file")
+            failed = 1
 
         if failed == 0:
             if samples <= 20000 and stepsize >= 1.0/2000.0: #Make sure hardware limits are respected
