@@ -189,7 +189,7 @@ class ODAC(object):
         #cleanup:
         del adcbufferstr
         del adcbufferrowstr
-
+        print("Finished!")
         #save:
         try:
             #datastructure:
@@ -238,6 +238,7 @@ class ODAC(object):
         #cleanup:
         del adcbuffer_full_str
         del adcbuffer_row_str
+        print("Finished!")
 
         #save:
         try:
@@ -334,7 +335,7 @@ class ODAC(object):
             #cleanup:
             del adcbuffer_full_str
             del adcbuffer_row_str
-
+            print("Finished!")
 
             #Save to File:
             try:
@@ -441,6 +442,7 @@ class ODAC(object):
             if len(self.adcbuffer3) == 0:
                 for step in range(0,nSteps-2):
                     self.adcbuffer3.append('')
+            print("Finished!")
 
             #Save:
             try:
@@ -479,7 +481,7 @@ class ODAC(object):
             self.adcbuffer3.append(float(adcbuffer_row_str[step].split(',')[3]))
             #Append times:
             self.adctimes.append(step*stepSize)
-
+        print("Finished!")
         #Save:
         try:
             #datastructure:
