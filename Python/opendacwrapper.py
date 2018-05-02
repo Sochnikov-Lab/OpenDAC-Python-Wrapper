@@ -286,18 +286,24 @@ class ODAC(object):
             print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
             #Send command over serial port:
             self.serIO.flush()
+            #self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n')) #Send command
             self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n')) #Send command
             self.serIO.flush()
             #Read acquisition data:
-            self.ser.timeout = nSteps*stepSize+5.0
-            adcbuffer_full_str = str(self.serIO.read(nSteps*13)) #Full buffer string
+            self.ser.timeout = nSteps*stepSize+10.0
+            adcbuffer_full_str = str(self.serIO.read(nSteps*13)).encode("utf-8") #Full buffer string
             self.ser.timeout = 0.25 #return to default timeout
             #Decompose full list string to rows:
             adcbuffer_row_str = adcbuffer_full_str.split("\n")
             #convert list into list of values:
             for i in range(0,nSteps):
+                #print(adcbuffer_row_str[i])
                 self.adctimes.append(i*stepSize)
-                self.adcbuffer.append(float(adcbuffer_row_str[i]))
+                try:
+                    self.adcbuffer.append(float(adcbuffer_row_str[i]))
+                except ValueError:
+                    print("Error converting point #%04d" %i)
+                    print adcbuffer_full_str
             #cleanup:
             del adcbuffer_full_str
             del adcbuffer_row_str
@@ -438,7 +444,8 @@ class ODAC(object):
             #datastructure:
             #time,ch0,ch1,ch2,ch3"
             print("Saved CH0 to file")
-            datafile = open(filename,'w')
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
             datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer[i]) +",,,\n")
@@ -447,7 +454,8 @@ class ODAC(object):
             #datastructure:
             #time,ch0,ch1,ch2,ch3"
             print("Saved CH1 to file")
-            datafile = open(filename,'w')
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
             datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + ",," + str(self.adcbuffer[i]) +",,\n")
@@ -456,7 +464,8 @@ class ODAC(object):
             #datastructure:
             #time,ch0,ch1,ch2,ch3"
             print("Saved CH2 to file")
-            datafile = open(filename,'w')
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
             datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + ",,," + str(self.adcbuffer[i]) +",\n")
@@ -465,7 +474,8 @@ class ODAC(object):
             #datastructure:
             #time,ch0,ch1,ch2,ch3"
             print("Saved CH3 to file")
-            datafile = open(filename,'w')
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
             datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
@@ -476,7 +486,8 @@ class ODAC(object):
             #datastructure:
             #time,ch0,ch1,ch2,ch3"
             print("Saved CH0-CH3 to file")
-            datafile = open(filename,'w')
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
             datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
@@ -485,7 +496,8 @@ class ODAC(object):
             #datastructure:
             #time,ch0,ch1,ch2,ch3"
             print("Saved two channels to file")
-            datafile = open(filename,'w')
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
             datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
                 datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
@@ -494,7 +506,8 @@ class ODAC(object):
             #datastructure:
             #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
             print("Saved Ramp and Read CH0 to file")
-            datafile = open(filename,'w')
+            fullfname = "data/" + filename
+            datafile = open(fullfname,'w')
             datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             print len(self.dacbuffer0)
             print len(self.dacbuffer1)
