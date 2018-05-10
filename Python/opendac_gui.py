@@ -146,8 +146,7 @@ class openDAC_UI(QMainWindow):
         try:
             samples = int(self.ui.lea2_samples.text())
             stepSize = 1.0/float(self.ui.lea2_srate.text())
-            filename = lea2_f            print("Saved CH0-CH3 to file")
-name.text()
+            filename = str(self.ui.lea2_fname.text())
         except ValueError:
             print("Error: Issue with values given.")
             failed = 1
@@ -187,7 +186,7 @@ name.text()
             try:
                 samples = int(self.ui.lea4_samples.text())
                 stepsize = 1.0/float(self.ui.lea4_srate.text())
-                filename = lea4_fname.text()
+                filename = str(self.ui.lea4_fname.text())
             except ValueError:
                 print("Error: Issue with values given.")
                 failed = 1
@@ -228,7 +227,7 @@ name.text()
                 v2 = float(self.ui.ler1vf.text())
                 steps = float(self.ui.ler1_steps.text())
                 interval = float(self.ui.ler1_intrv.text())
-                filename = ler1_fname.text()
+                filename = str(self.ui.ler1_fname.text())
             except ValueError:
                 print("Error: Issue with values given.")
                 failed = 1
@@ -253,7 +252,7 @@ name.text()
                 v3 = [float(self.ui.ler4vi_ch3.text()),float(self.ui.ler4vf_ch3.text())]
                 steps = float(self.ui.ler4_steps.text())
                 interval = float(self.ui.ler4_intrv.text())
-                filename = ler4_fname.text()
+                filename = str(self.ui.ler4_fname.text())
                 ch0inrange = v0[0] >= -10.0 and v0[0] <= 10.0 and v0[1] >= -10.0 and v0[1]  <= 10.0
                 ch1inrange = v1[0] >= -10.0 and v1[0] <= 10.0 and v1[1] >= -10.0 and v1[1] <= 10.0
                 ch2inrange = v2[0] >= -10.0 and v2[0] <= 10.0 and v2[1] >= -10.0 and v2[1] <= 10.0
@@ -409,10 +408,10 @@ name.text()
                 angfreq1 = 2.0*pi*float(self.ui.lesin_freq_ch1.text())
                 angfreq2 = 2.0*pi*float(self.ui.lesin_freq_ch2.text())
                 angfreq3 = 2.0*pi*float(self.ui.lesin_freq_ch3.text())
-                phase0 = float(self.ui.lesin_phi_ch0.text()) * (2 * pi / 360.0)
-                phase1 = float(self.ui.lesin_phi_ch1.text())  * (2 * pi / 360.0)
-                phase2 = float(self.ui.lesin_phi_ch2.text())  * (2 * pi / 360.0)
-                phase3 = float(self.ui.lesin_phi_ch3.text())  * (2 * pi / 360.0)
+                phase0 = float(self.ui.lesin_phi_ch0.text()) * (2.0 * pi / 360.0)
+                phase1 = float(self.ui.lesin_phi_ch1.text()) * (2.0 * pi / 360.0)
+                phase2 = float(self.ui.lesin_phi_ch2.text()) * (2.0 * pi / 360.0)
+                phase3 = float(self.ui.lesin_phi_ch3.text()) * (2.0 * pi / 360.0)
                 offset0 = float(self.ui.lesin_off_ch0.text())
                 offset1 = float(self.ui.lesin_off_ch1.text())
                 offset2 = float(self.ui.lesin_off_ch2.text())

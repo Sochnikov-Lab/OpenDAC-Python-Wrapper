@@ -11,6 +11,10 @@ import io
 from math import floor
 import time
 import os
+#Below: Attempt at a fix for Windows being weird
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 #DAC-ADC Controller Class
 class ODAC(object):
@@ -194,7 +198,7 @@ class ODAC(object):
         try:
             #datastructure:
             #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
-            fullfname = "data/" + filename
+            fullfname = "data/" + filename + ".csv"
             datafile = open(fullfname,'w')
             datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
@@ -244,7 +248,7 @@ class ODAC(object):
         try:
             #datastructure:
             #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
-            fullfname = "data/" + filename
+            fullfname = "data/" + filename + ".csv"
             datafile = open(fullfname,'w')
             datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
@@ -304,7 +308,7 @@ class ODAC(object):
         commandstr = 'SIN,' + str(dac) + ',' + str(v0) + ',' + str(angfreq) + ',' + str(phase) + ',' + str(offset) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))
     def sine4(self,v00,v01,v02,v03,angfreq0,angfreq1,angfreq2,angfreq3,phase0,phase1,phase2,phase3,offset0,offset1,offset2,offset3,interval):
-        commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\n'
+        commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\r'
         self.serIO.write(unicode(commandstr))
     def acquireOne(self,adc,nSteps,stepSize,runs,filename_base):
         for run in range(0,runs):
@@ -314,13 +318,19 @@ class ODAC(object):
             print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
             #Send command over serial port:
             self.serIO.flush()
-            #self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n')) #Send command
-            self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\n')) #Send command
+            time.sleep(0.25)
+            self.serIO.write(unicode('\r'))
             self.serIO.flush()
+            time.sleep(0.25)
+            self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\r')) #Send command
+            self.serIO.flush()
+
             #Read acquisition data:
             self.ser.timeout = nSteps*stepSize+10.0
             adcbuffer_full_str = str(self.serIO.read(nSteps*13)).encode("utf-8") #Full buffer string
             self.ser.timeout = 0.25 #return to default timeout
+
+            #self.serIO.flush()
             #Decompose full list string to rows:
             adcbuffer_row_str = adcbuffer_full_str.split("\n")
             #convert list into list of values:
@@ -376,6 +386,12 @@ class ODAC(object):
                 print("Data Saved")
             except IndexError:
                 print("Index error. Data not saved.")
+        self.serIO.flush()
+        time.sleep(0.25)
+        self.serIO.write(unicode('\r'))
+        self.serIO.flush()
+        time.sleep(0.25)
+
     def acquireTwo(self,adcA,adcB,nSteps,stepSize,filename):
         #setup and flags:
         self.clearBuffers()
@@ -390,7 +406,11 @@ class ODAC(object):
             #write command:
             print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
             self.serIO.flush()
-            self.serIO.write(unicode('ACQ2,' + str(adcA) + ',' + str(adcB) + ',' + str(nSteps) + ',' + str(stepSize) + '\n'))
+            time.sleep(0.25)
+            self.serIO.write(unicode('\r'))
+            self.serIO.flush()
+            time.sleep(0.25)
+            self.serIO.write(unicode('ACQ2,' + str(adcA) + ',' + str(adcB) + ',' + str(nSteps) + ',' + str(stepSize) + '\r'))
             self.serIO.flush()
             #read data from serial port:
             self.ser.timeout = nSteps*stepSize+1.0
@@ -448,7 +468,7 @@ class ODAC(object):
             try:
                 #datastructure:
                 #time,ch0,ch1,ch2,ch3"
-                fullfname = "data/" + filename
+                fullfname = "data/" + filename + ".csv"
                 datafile = open(fullfname,'w')
                 datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
                 for i in range(0,len(self.adctimes)):
@@ -457,15 +477,26 @@ class ODAC(object):
                 print("Data saved.")
             except IndexError:
                 print("Index Error: Data not saved.")
+            self.serIO.flush()
+            time.sleep(0.25)
+            self.serIO.write(unicode('\r'))
+            self.serIO.flush()
+            time.sleep(0.25)
         else:
             print("ODAC Error: Duplicate adc channel selected. Canceled acquisition.")
     def acquireAll(self,nSteps,stepSize,filename):
         self.clearBuffers()
         self.adc1rec = - 2
-        commandstr = 'ACQA,' + str(nSteps) + ',' + str(stepSize) + '\n'
-        self.serIO.write(unicode(commandstr))
+
         self.serIO.flush()
-        self.ser.timeout = nSteps*stepSize+1.0
+        time.sleep(0.25)
+        self.serIO.write(unicode('\r'))
+        self.serIO.flush()
+        time.sleep(0.25)
+        self.serIO.write(unicode('ACQA,' + str(nSteps) + ',' + str(stepSize) + '\r'))
+        self.serIO.flush()
+
+        self.ser.timeout = nSteps*stepSize+10
         print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
         adcbuffer_full_str = str(self.serIO.read(nSteps*52)) #Full buffer string
         self.ser.timeout = 0.25 #return to default timeout
@@ -486,7 +517,7 @@ class ODAC(object):
         try:
             #datastructure:
             #time,ch0,ch1,ch2,ch3"
-            fullfname = "data/" + filename
+            fullfname = "data/" + filename + ".csv"
             datafile = open(fullfname,'w')
             datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
             for i in range(0,len(self.adctimes)):
@@ -495,6 +526,12 @@ class ODAC(object):
             print("Data Saved")
         except IndexError:
             print("Index Error: Data not saved")
+
+        self.serIO.flush()
+        time.sleep(0.25)
+        self.serIO.write(unicode('\r'))
+        self.serIO.flush()
+        time.sleep(0.25)
     """ Deprecated
     def saveToFile(self,filename):
         #Check sizes of buffers, determine what chs are recorded:
