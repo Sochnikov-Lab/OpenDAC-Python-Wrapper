@@ -112,10 +112,10 @@ void linearReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
     Serial.flush();
     if (linpos != linlen - 1)
     {
-      Serial.print('\n');
+      Serial.print(',');
     }
   }
-  //Serial.println(' ');
+  Serial.print("\r\n"); //Attempt to fix breaking after one cycle for Windows. May break Linux compatibility.
 }
 
 
@@ -139,8 +139,8 @@ void quadReadBuffer(float arr[bufferv_xdim][bufferv_ydim],int linlen)
         Serial.print("\n");
       }
     }
-    //Serial.println(' ');
   }
+  //Serial.print("\r\n"); //Attempt to fix breaking after one cycle for Windows. May break Linux compatibility.
 }
 
 //Ideally reads buffer out in 2 columns (ch: A  B)

@@ -233,6 +233,7 @@ class openDAC_UI(QMainWindow):
                 failed = 1
             if failed == 0:
                 if v1 >= -10.0 and v1 <= 10.0 and v2 >= -10.0 and v2 <= 10.0:
+                    print("RAR1 Started.")
                     self.DAC.rampread1(adc,dac,v1,v2,steps,interval,filename)
                 else:
                     print("Error: Check Voltage Range")

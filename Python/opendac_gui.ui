@@ -90,7 +90,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>
@@ -842,7 +842,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Interval (us)</string>
+           <string>Interval (s)</string>
           </property>
          </widget>
         </item>
@@ -1147,7 +1147,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Interval (us)</string>
+           <string>Interval (s)</string>
           </property>
          </widget>
         </item>
@@ -1670,7 +1670,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>

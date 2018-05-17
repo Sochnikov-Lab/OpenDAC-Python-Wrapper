@@ -24,7 +24,7 @@ class ODAC(object):
         self.ready = False   #If device is ready for command
         self.ser = serial.Serial() #Serial Instance
         self.ser.timeout = 0.25 #read timeout --Should fix this to get rid of latency
-        self.serIO = io.TextIOWrapper(io.BufferedRWPair(self.ser,self.ser),newline='\r\n')
+        self.serIO = io.TextIOWrapper(io.BufferedRWPair(self.ser,self.ser),newline='\r\n') #Linux
         self.adctimes = [] #Timestamp list
         #Single CH acquire buffer:
         self.adcbuffer = []
@@ -47,7 +47,7 @@ class ODAC(object):
             self.ser.baudrate = BAUDRATE
             self.ser.open()
 
-            #--Hack --
+            #--Hack -- BufferedRWPair does not sync. This forces it to.
             #To fix control commands not working
             self.serIO.write(unicode('\r'))
             self.serIO.flush()
@@ -121,25 +121,27 @@ class ODAC(object):
     def ramp2(self,dac1,dac2,v1i,v2i,v1f,v2f,steps,interval):
         self.serIO.write(unicode('RAMP2,'+ str(dac) + ',' + str(v1i) + ',' + str(v2i) + ',' + str(v1f) + ',' + str(v2f) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
-    def rampread1(self,adc,dac,v1,v2,steps,interval):
+    def rampread1(self,adc,dac,v1,v2,steps,interval,filename):
         #Setup and flags:
         self.clearBuffers()
         self.adc1rec = -4 #-4 = rampread1 or rampread4
         voltagestep = (v2 - v1)/(steps-1)
         #Send command:
+        self.serIO.flush()
         self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
         #Read serial data:
         self.ser.timeout = steps*interval+5.0
-        adcbufferstr = str(self.serIO.read(int(steps)*13)) #Full buffer string
+        adcbufferstr = str(self.serIO.read(int(steps)*13)).encode("utf-8") #Full buffer string
         self.ser.timeout = 0.25 #return to default timeout
         self.serIO.flush()
         #Decompose full list string to rows:
-        adcbufferrowstr = adcbufferstr.split("\n")
-
+        adcbufferrowstr = adcbufferstr.split(",")
+        print adcbufferrowstr
         #Put data into correct buffer:
         if adc == 0:
             for i in range(0,len(adcbufferrowstr)):
+                print adcbufferrowstr[i]
                 self.adcbuffer0.append(float(adcbufferrowstr[i]))
         if adc == 1:
             for i in range(0,len(adcbufferrowstr)):
@@ -207,6 +209,13 @@ class ODAC(object):
             print("Data Saved")
         except IndexError:
             print("Index Error: Data not saved")
+        #--Hack-- to clear buffer. BufferedRWPair does not sync.
+        self.serIO.write(unicode('\r'))
+        self.serIO.flush()
+        self.serIO.readline()
+        self.serIO.flush()
+        time.sleep(0.25)
+        #--Hack--
     def rampread4(self,v0,v1,v2,v3,steps,interval,filename):
         #setup and flags:
         self.clearBuffers()
@@ -257,6 +266,13 @@ class ODAC(object):
             print("Data Saved")
         except IndexError:
             print("Index Error: Data not saved")
+        #--Hack-- to clear buffer. BufferedRWPair does not sync.
+        self.serIO.write(unicode('\r'))
+        self.serIO.flush()
+        self.serIO.readline()
+        self.serIO.flush()
+        time.sleep(0.25)
+        #--Hack--
     def rampread4NB(self,v0,v1,v2,v3,steps,subsamples,interval,settle,dwell,filename):
         #setup and flags:
         self.clearBuffers()
@@ -318,9 +334,9 @@ class ODAC(object):
             print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
             #Send command over serial port:
             self.serIO.flush()
-            time.sleep(0.25)
-            self.serIO.write(unicode('\r'))
-            self.serIO.flush()
+            #time.sleep(0.25)
+            #self.serIO.write(unicode('\r'))
+            #self.serIO.flush()
             time.sleep(0.25)
             self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\r')) #Send command
             self.serIO.flush()
@@ -329,10 +345,9 @@ class ODAC(object):
             self.ser.timeout = nSteps*stepSize+10.0
             adcbuffer_full_str = str(self.serIO.read(nSteps*13)).encode("utf-8") #Full buffer string
             self.ser.timeout = 0.25 #return to default timeout
-
-            #self.serIO.flush()
+            self.serIO.flush()
             #Decompose full list string to rows:
-            adcbuffer_row_str = adcbuffer_full_str.split("\n")
+            adcbuffer_row_str = adcbuffer_full_str.split(",")
             #convert list into list of values:
             for i in range(0,nSteps):
                 #print(adcbuffer_row_str[i])
@@ -386,11 +401,15 @@ class ODAC(object):
                 print("Data Saved")
             except IndexError:
                 print("Index error. Data not saved.")
-        self.serIO.flush()
-        time.sleep(0.25)
-        self.serIO.write(unicode('\r'))
-        self.serIO.flush()
-        time.sleep(0.25)
+
+            #--Hack-- to clear buffer. BufferedRWPair does not sync.
+            self.serIO.write(unicode('\r'))
+            self.serIO.flush()
+            self.serIO.readline()
+            time.sleep(0.25)
+            #--Hack--
+
+
 
     def acquireTwo(self,adcA,adcB,nSteps,stepSize,filename):
         #setup and flags:
@@ -406,10 +425,6 @@ class ODAC(object):
             #write command:
             print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
             self.serIO.flush()
-            time.sleep(0.25)
-            self.serIO.write(unicode('\r'))
-            self.serIO.flush()
-            time.sleep(0.25)
             self.serIO.write(unicode('ACQ2,' + str(adcA) + ',' + str(adcB) + ',' + str(nSteps) + ',' + str(stepSize) + '\r'))
             self.serIO.flush()
             #read data from serial port:
@@ -478,24 +493,20 @@ class ODAC(object):
             except IndexError:
                 print("Index Error: Data not saved.")
             self.serIO.flush()
-            time.sleep(0.25)
+            #--Hack-- to clear buffer. BufferedRWPair does not sync.
             self.serIO.write(unicode('\r'))
             self.serIO.flush()
+            self.serIO.readline()
             time.sleep(0.25)
+            #--Hack--
         else:
             print("ODAC Error: Duplicate adc channel selected. Canceled acquisition.")
     def acquireAll(self,nSteps,stepSize,filename):
         self.clearBuffers()
         self.adc1rec = - 2
-
         self.serIO.flush()
-        time.sleep(0.25)
-        self.serIO.write(unicode('\r'))
-        self.serIO.flush()
-        time.sleep(0.25)
         self.serIO.write(unicode('ACQA,' + str(nSteps) + ',' + str(stepSize) + '\r'))
         self.serIO.flush()
-
         self.ser.timeout = nSteps*stepSize+10
         print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
         adcbuffer_full_str = str(self.serIO.read(nSteps*52)) #Full buffer string
@@ -526,97 +537,15 @@ class ODAC(object):
             print("Data Saved")
         except IndexError:
             print("Index Error: Data not saved")
-
         self.serIO.flush()
-        time.sleep(0.25)
+        #--Hack-- to clear buffer. BufferedRWPair does not sync.
         self.serIO.write(unicode('\r'))
         self.serIO.flush()
+        self.serIO.readline()
         time.sleep(0.25)
-    """ Deprecated
-    def saveToFile(self,filename):
-        #Check sizes of buffers, determine what chs are recorded:
-        if self.adc1rec == 0:    #CH0 recorded
-            #datastructure:
-            #time,ch0,ch1,ch2,ch3"
-            print("Saved CH0 to file")
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer[i]) +",,,\n")
-            datafile.close()
-        if self.adc1rec == 1:#CH1 recorded
-            #datastructure:
-            #time,ch0,ch1,ch2,ch3"
-            print("Saved CH1 to file")
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + ",," + str(self.adcbuffer[i]) +",,\n")
-            datafile.close()
-        if self.adc1rec == 2:#CH2 recorded
-            #datastructure:
-            #time,ch0,ch1,ch2,ch3"
-            print("Saved CH2 to file")
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + ",,," + str(self.adcbuffer[i]) +",\n")
-            datafile.close()
-        if self.adc1rec == 3:#CH3 recorded
-            #datastructure:
-            #time,ch0,ch1,ch2,ch3"
-            print("Saved CH3 to file")
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + ",,,," + str(self.adcbuffer[i]) +"\n")
-            datafile.close()
-        if self.adc1rec == -1:#NOTHING recorded
-            print "User Error: No data collected"
-        if self.adc1rec == -2:#ALL recorded
-            #datastructure:
-            #time,ch0,ch1,ch2,ch3"
-            print("Saved CH0-CH3 to file")
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-            datafile.close()
-        if self.adc1rec == -3:#Two recorded
-            #datastructure:
-            #time,ch0,ch1,ch2,ch3"
-            print("Saved two channels to file")
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-            datafile.close()
-        if self.adc1rec == -4:#Ramp and Read 1 or 4
-            #datastructure:
-            #time,DAC0,DAC1,DAC2,DAC3,ADC0,ADC1,ADC2,ADC3"
-            fullfname = "data/" + filename
-            datafile = open(fullfname,'w')
-            datafile.write("time(s),DAC ch0(V),DAC ch1(V),DAC ch2(V),DAC ch3(V),ADC ch0(V),ADC ch1(V),ADC ch2(V),ADC ch3(V)\n")
-            print len(self.dacbuffer0)
-            print len(self.dacbuffer1)
-            print len(self.dacbuffer2)
-            print len(self.dacbuffer3)
-            print len(self.adcbuffer0)
-            print len(self.adcbuffer1)
-            print len(self.adcbuffer2)
-            print len(self.adcbuffer3)
-            for i in range(0,len(self.adctimes)):
-                datafile.write(str(self.adctimes[i]) + "," + str(self.dacbuffer0[i]) + "," + str(self.dacbuffer1[i]) + "," + str(self.dacbuffer2[i]) + "," + str(self.dacbuffer3[i]) + "," + str(self.adcbuffer0[i]) + "," + str(self.adcbuffer1[i]) + "," + str(self.adcbuffer2[i]) + "," + str(self.adcbuffer3[i]) + "\n")
-            datafile.close()
-    """
+        #--Hack--
     def viewPDS(self,channel,gain,runs,filename_base):
-
+        print("Loading PDS. Please be patient!")
         #Construct execution string:
         commandstr =  "python tt_to_pds.py " + str(channel) + " " + str(gain) + " "
         #print commandstr
