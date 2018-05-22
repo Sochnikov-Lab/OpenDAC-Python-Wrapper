@@ -343,8 +343,40 @@ class ODAC(object):
         commandstr = 'SIN,' + str(dac) + ',' + str(v0) + ',' + str(angfreq) + ',' + str(phase) + ',' + str(offset) + ',' + str(interval) + '\n'
         self.serIO.write(unicode(commandstr))
     def sine4(self,v00,v01,v02,v03,angfreq0,angfreq1,angfreq2,angfreq3,phase0,phase1,phase2,phase3,offset0,offset1,offset2,offset3,interval):
-        commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\r'
-        self.serIO.write(unicode(commandstr))
+        #commandstr = 'SIN4,' + str(v00) + ',' + str(v01) + ',' + str(v02) + ',' + str(v03) + ',' + str(angfreq0)  + ',' + str(angfreq1)  + ',' + str(angfreq2)  + ',' + str(angfreq3) + ',' + str(phase0) + ',' + str(phase1) + ',' + str(phase2) + ',' + str(phase3) + ',' + str(offset0) + ',' + str(offset1) + ',' + str(offset2) + ',' + str(offset3) + ',' + str(interval) + '\r'
+        #self.serIO.write(unicode(commandstr))
+        #self.serIO.flush()
+
+        commandstr0 = 'SIN4,' + str(v00) + ',' + str(v01) + ','
+        commandstr1 = str(v02) + ',' + str(v03) + ','
+        commandstr2 = str(angfreq0)  + ',' + str(angfreq1)  + ','
+        commandstr3 = str(angfreq2)  + ',' + str(angfreq3) + ','
+        commandstr4 = str(phase0) + ',' + str(phase1) + ','
+        commandstr5 = str(phase2) + ',' + str(phase3) + ','
+        commandstr6 = str(offset0) + ',' + str(offset1) + ','
+        commandstr7 = str(offset2) + ',' + str(offset3) + ','
+        commandstr8 = str(interval) + '\r'
+
+        self.serIO.write(unicode(commandstr0))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr1))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr2))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr3))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr4))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr5))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr6))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr7))
+        self.serIO.flush()
+        self.serIO.write(unicode(commandstr8))
+        self.serIO.flush()
+
+
     def acquireOne(self,adc,nSteps,stepSize,runs,filename_base):
         for run in range(0,runs):
             #setup and flags:
