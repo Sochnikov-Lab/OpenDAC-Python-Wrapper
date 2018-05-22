@@ -145,7 +145,7 @@ class ODAC(object):
         self.serIO.flush()
         #Decompose full list string to rows:
         adcbufferrowstr = adcbufferstr.split(",")
-        print adcbufferrowstr
+        #print adcbufferrowstr
         #Put data into correct buffer:
         if adc == 0:
             for i in range(0,len(adcbufferrowstr)):
@@ -251,7 +251,6 @@ class ODAC(object):
 
         #Decompose full list string to rows:
         adcbuffer_row_str = adcbuffer_full_str.split("\n")
-        print adcbuffer_row_str
         #adcbuffer_row_str[0].split(',')[1]: voltage for row 0 ch 1
         #convert each line into list of values, append values to buffers:
         for step in range(0,len(adcbuffer_row_str)-1):
