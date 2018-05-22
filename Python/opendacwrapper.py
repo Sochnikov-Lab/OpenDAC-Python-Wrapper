@@ -24,7 +24,8 @@ class ODAC(object):
         self.ready = False   #If device is ready for command
         self.ser = serial.Serial() #Serial Instance
         self.ser.timeout = 0.25 #read timeout --Should fix this to get rid of latency
-        self.serIO = io.TextIOWrapper(io.BufferedRWPair(self.ser,self.ser),newline='\r\n') #Linux
+        self.serIO = io.TextIOWrapper(io.BufferedRWPair(self.ser,self.ser),encoding = "ascii",newline="\r\n") #Linux
+        #self.serIO = io.TextIOWrapper(io.BufferedRandom(self.ser),newline="\r\n")
         self.adctimes = [] #Timestamp list
         #Single CH acquire buffer:
         self.adcbuffer = []
@@ -128,7 +129,14 @@ class ODAC(object):
         voltagestep = (v2 - v1)/(steps-1)
         #Send command:
         self.serIO.flush()
-        self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
+        #self.serIO.write(unicode('RAR1,'+ str(adc) + ',' + str(dac) + ',' + str(v1) + ',' + str(v2) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
+        self.serIO.write(unicode('RAR1,'+ str(adc)))
+        self.serIO.flush()
+        self.serIO.write(unicode(',' + str(dac) + ',' + str(v1) + ',' + str(v2)))
+        self.serIO.flush()
+        self.serIO.write(unicode(',' + str(steps)))
+        self.serIO.flush()
+        self.serIO.write(unicode(','+ str(interval) + ',' + '\r'))
         self.serIO.flush()
         #Read serial data:
         self.ser.timeout = steps*interval+5.0
@@ -222,10 +230,21 @@ class ODAC(object):
         self.adc1rec = -4 #-4 = rampread1 or rampread4
         voltagestep = [(v0[1]-v0[0])/(steps-1),(v1[1]-v1[0])/(steps-1),(v2[1]-v2[0])/(steps-1),(v3[1]-v3[0])/(steps-1)]
         #Send command over serial port:
-        self.serIO.write(unicode('RARA,'+ str(v0[0]) + ',' + str(v0[1]) + ',' + str(v1[0]) + ',' + str(v1[1]) + ',' + str(v2[0]) + ',' + str(v2[1]) + ',' + str(v3[0]) + ',' + str(v3[1]) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
+        #self.serIO.write(unicode('RARA,'+ str(v0[0]) + ',' + str(v0[1]) + ',' + str(v1[0]) + ',' + str(v1[1]) + ',' + str(v2[0]) + ',' + str(v2[1]) + ',' + str(v3[0]) + ',' + str(v3[1]) + ',' + str(steps) + ',' + str(interval) + ',' + '\r'))
+        #self.serIO.flush()
+        self.serIO.flush()
+        self.serIO.write(unicode('RARA,'+ str(v0[0]) + ',' + str(v0[1])))
+        self.serIO.flush()
+        self.serIO.write(unicode(',' + str(v1[0]) + ',' + str(v1[1])))
+        self.serIO.flush()
+        self.serIO.write(unicode( ',' + str(v2[0]) + ',' + str(v2[1])))
+        self.serIO.flush()
+        self.serIO.write(unicode(',' + str(v3[0]) + ',' + str(v3[1])))
+        self.serIO.flush()
+        self.serIO.write(unicode(',' + str(steps) + ',' + str(interval) + ',' + '\r'))
         self.serIO.flush()
         #Read serial data:
-        self.ser.timeout = steps*interval+5
+        self.ser.timeout = steps*interval+10
         adcbuffer_full_str = str(self.serIO.read(int(steps)*52)) #Full buffer string
         self.ser.timeout = 0.25
         self.serIO.flush()
@@ -338,12 +357,17 @@ class ODAC(object):
             #self.serIO.write(unicode('\r'))
             #self.serIO.flush()
             time.sleep(0.25)
-            self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\r')) #Send command
+            #self.serIO.write(unicode('ACQ1,' + str(adc) + ',' + str(nSteps) + ',' + str(stepSize) + '\r')) #Send command
+            #self.serIO.flush()
+            self.serIO.write(unicode('ACQ1,' + str(adc))) #Send command
             self.serIO.flush()
-
+            self.serIO.write(unicode(',' + str(nSteps) + ',')) #Send command
+            self.serIO.flush()
+            self.serIO.write(unicode(str(stepSize) + '\r')) #Send command
+            self.serIO.flush()
             #Read acquisition data:
             self.ser.timeout = nSteps*stepSize+10.0
-            adcbuffer_full_str = str(self.serIO.read(nSteps*13)).encode("utf-8") #Full buffer string
+            adcbuffer_full_str = str(self.serIO.read(2+nSteps*13)).encode("utf-8") #Full buffer string
             self.ser.timeout = 0.25 #return to default timeout
             self.serIO.flush()
             #Decompose full list string to rows:
@@ -505,7 +529,10 @@ class ODAC(object):
         self.clearBuffers()
         self.adc1rec = - 2
         self.serIO.flush()
-        self.serIO.write(unicode('ACQA,' + str(nSteps) + ',' + str(stepSize) + '\r'))
+        #self.serIO.write(unicode('ACQA,' + str(nSteps) + ',' + str(stepSize) + '\r'))
+        self.serIO.write(unicode('ACQA,' + str(nSteps)))
+        self.serIO.flush()
+        self.serIO.write(unicode(',' + str(stepSize) + '\r'))
         self.serIO.flush()
         self.ser.timeout = nSteps*stepSize+10
         print("Acquire " + str(nSteps) + " samples for " + str(nSteps*stepSize) + " sec at " + str(1.0/stepSize) + " Hz")
